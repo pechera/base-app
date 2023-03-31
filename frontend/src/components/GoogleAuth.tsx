@@ -3,6 +3,8 @@ import Axios from '../services/Axios';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import useUserStore from '../store/Store';
+
 type GoogleAuthData = {
     clientId: string;
     jwtToken: string;
@@ -16,6 +18,8 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
     const [searchParams, setSearchParams] = useSearchParams({});
     const navigate = useNavigate();
 
+    const { loginUser } = useUserStore();
+
     const sendGoogleData = async (
         clientId: string,
         jwtToken: string
@@ -26,11 +30,13 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
                 jwtToken,
             });
 
-            const { accessToken, refreshToken } = response.data;
+            const { accessToken, refreshToken, username } = response.data;
 
             if (accessToken && refreshToken) {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);
+
+                loginUser(username);
 
                 const redirect = searchParams.get('redirect');
 

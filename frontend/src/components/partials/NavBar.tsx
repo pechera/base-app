@@ -1,16 +1,12 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 
-import {
-    Container,
-    Nav,
-    Navbar,
-    Button,
-    NavDropdown,
-    Dropdown,
-} from 'react-bootstrap';
+import useUserStore from '../../store/Store';
+
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
 const NavBar: React.FC = () => {
+    const { username } = useUserStore();
+
     return (
         <Navbar bg="light" expand="lg">
             <Container>
@@ -21,9 +17,9 @@ const NavBar: React.FC = () => {
                         <Nav.Link href="#">Menu 1</Nav.Link>
                         <Nav.Link href="#">Menu 2</Nav.Link>
                         <Nav.Link href="#">Menu 3</Nav.Link>
-                        <Nav.Link href="/profile">Profile</Nav.Link>
+                        <Nav.Link href="#">Menu 4</Nav.Link>
                     </Nav>
-                    {/* <Nav>
+                    <Nav>
                         <NavDropdown
                             id="nav-dropdown-profile"
                             title={username || 'John Doe'}
@@ -31,9 +27,6 @@ const NavBar: React.FC = () => {
                         >
                             <NavDropdown.Item href="/profile">
                                 Profile
-                            </NavDropdown.Item>
-                            <NavDropdown.Item href="/pricing">
-                                Pricing
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item
@@ -43,9 +36,6 @@ const NavBar: React.FC = () => {
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>
-                    </Nav> */}
-                    <Nav>
-                        <Nav.Link href="/logout">Logout</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

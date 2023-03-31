@@ -20,13 +20,20 @@ const App: React.FC = () => {
                 />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registration" element={<Registration />} />
-                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/recovery" element={<PasswordRecovery />} />
                 <Route path="/mail/:link" element={<MailActivation />} />
                 <Route
                     path="/recovery/:link"
                     element={<RecoveryActivation />}
+                />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <Private>
+                            <Dashboard />
+                        </Private>
+                    }
                 />
                 <Route
                     path="*"

@@ -1,29 +1,36 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import secureLocalStorage from 'react-secure-storage';
 
-const useUserStore = create(
+interface UserState {
+    username: string; // undefined
+    isAuth: boolean;
+    loginUser: (username: string) => void;
+    logoutUser: () => void;
+}
+
+const useUserStore = create<UserState>()(
     devtools(
         persist(
             (set) => ({
                 username: '',
                 isAuth: false,
-                setUsername: (data: string) =>
+                loginUser: (username: string) => {
                     set({
-                        username: data,
-                    }),
-                loginUser: () =>
-                    set({
+                        username,
                         isAuth: true,
-                    }),
-                logoutUser: () =>
+                    });
+                },
+                logoutUser: () => {
                     set({
                         username: '',
                         isAuth: false,
-                    }),
+                    });
+                },
             }),
             {
                 name: 'storedata',
-                storage: createJSONStorage(() => localStorage), //  secureLocalStorage
+                storage: createJSONStorage(() => localStorage), //  or unsecure  secureLocalStorage
             }
         )
     )

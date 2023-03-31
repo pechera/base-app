@@ -1,4 +1,4 @@
-# MVP base app on React + NodeJS + Typescript
+# MVP base app on Typescript + React + NodeJS
 
 Basic setup on MERN stack for your MVP. In this project implemets:
 
@@ -9,10 +9,10 @@ Basic setup on MERN stack for your MVP. In this project implemets:
 ✅ Email activation\
 ✅ Password recovery function\
 ✅ Private routes\
-⬜️ Form validation on frontend and backend both
-⬜️ Email service via Amazon SES (now it's local SMTP)\
+✅ Form validation on frontend and backend both
+✅ State manager for saving user info around the app
+⬜️ Email service via Amazon SES (now it's test SMTP)\
 ⬜️ Profile page where users can change account info
-⬜️ State manager for saving user info around the app
 
 Stack: Typescript, React, React Router, NodeJS, Express, MongoDB, Redis, Nodemailer\
 Styles: Bootstrap

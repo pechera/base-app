@@ -7,11 +7,14 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import GoogleAuth from './GoogleAuth';
 
+import useUserStore from '../store/Store';
+
 import styles from './styles/login.module.css';
 
-type Tokens = {
+type ResponseData = {
     accessToken: string;
     refreshToken: string;
+    username: string;
 };
 
 type FormValues = {
@@ -21,6 +24,8 @@ type FormValues = {
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
+
+    const { loginUser } = useUserStore();
 
     const [searchParams, setSearchParams] = useSearchParams({});
 
@@ -38,11 +43,14 @@ const Login: React.FC = () => {
         try {
             const response = await Axios.post('/api/login', data);
 
-            const { accessToken, refreshToken }: Tokens = response.data;
+            const { accessToken, refreshToken, username }: ResponseData =
+                response.data;
 
             if (accessToken && refreshToken) {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);
+
+                loginUser(username);
 
                 const redirect = searchParams.get('redirect');
 
