@@ -30,7 +30,6 @@ router.get('/login', (req: Request, res: Response) => {
 router.post('/login', async (req: Request, res: Response) => {
     const { email, password }: LoginData = req.body;
 
-    console.log(req.body);
     try {
         await loginSchema.validateAsync({ email, password });
 
