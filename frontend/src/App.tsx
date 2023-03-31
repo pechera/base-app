@@ -9,6 +9,7 @@ import RecoveryActivation from './components/RecoveryActivation';
 import PasswordRecovery from './components/PasswordRecovery';
 
 import Private from './router/Private';
+import Profile from './components/Profile';
 
 const App: React.FC = () => {
     return (
@@ -32,6 +33,14 @@ const App: React.FC = () => {
                     element={
                         <Private>
                             <Dashboard />
+                        </Private>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <Private>
+                            <Profile />
                         </Private>
                     }
                 />

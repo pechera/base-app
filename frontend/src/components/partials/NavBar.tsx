@@ -1,16 +1,19 @@
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../store/Store';
 
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
 const NavBar: React.FC = () => {
+    const navigate = useNavigate();
     const { username } = useUserStore();
 
     return (
         <Navbar bg="light" expand="lg">
             <Container>
-                <Navbar.Brand href="/dashboard">BASE APP</Navbar.Brand>
+                <Navbar.Brand onClick={() => navigate('/dashboard')}>
+                    BASE APP
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
@@ -25,12 +28,14 @@ const NavBar: React.FC = () => {
                             title={username || 'John Doe'}
                             menuVariant="light"
                         >
-                            <NavDropdown.Item href="/profile">
+                            <NavDropdown.Item
+                                onClick={() => navigate('/profile')}
+                            >
                                 Profile
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item
-                                href="/logout"
+                                onClick={() => navigate('/logout')}
                                 className="text-danger"
                             >
                                 Logout

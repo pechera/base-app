@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Axios from '../services/Axios';
@@ -85,7 +86,7 @@ const PasswordRecovery: React.FC = () => {
                         </Button>
                     </div>
                     <p className="text-center mt-2">
-                        Back to <a href="/login">login</a>
+                        Back to <Link to="/login">Login</Link>
                     </p>
                 </div>
             </Form>

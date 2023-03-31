@@ -2,13 +2,13 @@ import React from 'react';
 import NavBar from './partials/NavBar';
 import { Container } from 'react-bootstrap';
 
-const Dashboard: React.FC = () => {
+const Profile = () => {
     return (
         <div>
             <NavBar />
-            <Container>Dashboard</Container>
+            <Container>Profile</Container>
         </div>
     );
 };
 
-export default Dashboard;
+export default Profile;

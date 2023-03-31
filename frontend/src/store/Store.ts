@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import secureLocalStorage from 'react-secure-storage';
+// import secureLocalStorage from 'react-secure-storage';
 
 interface UserState {
     username: string; // undefined
@@ -30,7 +30,7 @@ const useUserStore = create<UserState>()(
             }),
             {
                 name: 'storedata',
-                storage: createJSONStorage(() => localStorage), //  or unsecure  secureLocalStorage
+                storage: createJSONStorage(() => localStorage), //  secureLocalStorage
             }
         )
     )

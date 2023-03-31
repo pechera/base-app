@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Axios from '../services/Axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Alert, Form, Row, Col } from 'react-bootstrap';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -142,7 +142,8 @@ const Login: React.FC = () => {
                             <Col>
                                 <Form.Text className="d-flex text-muted justify-content-end">
                                     <span style={{ fontSize: '12px' }}>
-                                        Forgot <a href="/recovery">password?</a>
+                                        Forgot{' '}
+                                        <Link to="/recovery">password?</Link>
                                     </span>
                                 </Form.Text>
                             </Col>
@@ -161,7 +162,7 @@ const Login: React.FC = () => {
                     </div>
                     <div className="text-center mt-3">
                         <span className="link">Don't have an account? </span>
-                        <a href="/registration">Registration</a>
+                        <Link to="/registration">Sign Up</Link>
                     </div>
                 </div>
             </form>

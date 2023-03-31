@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import Axios from '../services/Axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
@@ -15,7 +15,7 @@ type FormValues = {
     password: string;
 };
 
-const Registration = () => {
+const Registration: React.FC = () => {
     const navigate = useNavigate();
 
     const {
@@ -151,7 +151,8 @@ const Registration = () => {
                             <Col>
                                 <Form.Text className="d-flex text-muted justify-content-end">
                                     <span style={{ fontSize: '12px' }}>
-                                        Forgot <a href="/recovery">password?</a>
+                                        Forgot{' '}
+                                        <Link to="/recovery">password?</Link>
                                     </span>
                                 </Form.Text>
                             </Col>
@@ -171,7 +172,7 @@ const Registration = () => {
                     <div className="text-center mt-3">
                         Already registered?{' '}
                         <span className="link-primary">
-                            <a href="/login">Sign In</a>
+                            <Link to="/login">Sign In</Link>
                         </span>
                     </div>
                 </div>

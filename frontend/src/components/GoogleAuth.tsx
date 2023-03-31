@@ -5,11 +5,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import useUserStore from '../store/Store';
 
-type GoogleAuthData = {
-    clientId: string;
-    jwtToken: string;
-};
-
 type GoogleAuthProps = {
     setError: (error: string) => void;
 };
