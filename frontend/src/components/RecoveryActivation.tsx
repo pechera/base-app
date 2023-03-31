@@ -29,7 +29,6 @@ const RecoveryActivation: React.FC = () => {
     });
 
     const password = watch('password');
-    // const confirmPassword = watch('confirmPassword');
 
     useEffect(() => {
         (async () => {
@@ -54,16 +53,13 @@ const RecoveryActivation: React.FC = () => {
                 password,
             });
 
-            if (response.data.error) {
-                toast.error(response.data.error);
-            }
-
             if (response.data.message) {
                 toast.success(response.data.message);
-                navigate('/login', { replace: true });
+                navigate('/login'); // { replace: true }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
+            toast.error(error.response.data.error);
         }
     };
 
@@ -100,8 +96,8 @@ const RecoveryActivation: React.FC = () => {
                                 {...register('password', {
                                     required: 'Password is requared',
                                     minLength: {
-                                        value: 3,
-                                        message: 'Minimum 3 symbols',
+                                        value: 5,
+                                        message: 'Minimum 5 symbols',
                                     },
                                     maxLength: {
                                         value: 50,
@@ -110,14 +106,7 @@ const RecoveryActivation: React.FC = () => {
                                 })}
                             />
                             {errors.password && (
-                                <div
-                                    style={{
-                                        color: 'red',
-                                        fontSize: '12px',
-                                        marginTop: '5px',
-                                        paddingLeft: '5px',
-                                    }}
-                                >
+                                <div className={styles.error_message}>
                                     {errors.password.message}
                                 </div>
                             )}
@@ -135,8 +124,8 @@ const RecoveryActivation: React.FC = () => {
                                 {...register('confirmPassword', {
                                     required: 'Password is requared',
                                     minLength: {
-                                        value: 3,
-                                        message: 'Minimum 3 symbols',
+                                        value: 5,
+                                        message: 'Minimum 5 symbols',
                                     },
                                     maxLength: {
                                         value: 50,

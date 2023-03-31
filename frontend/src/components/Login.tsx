@@ -28,6 +28,7 @@ const Login: React.FC = () => {
         register,
         handleSubmit,
         reset,
+        resetField,
         formState: { errors },
     } = useForm<FormValues>({
         mode: 'onBlur',
@@ -49,12 +50,13 @@ const Login: React.FC = () => {
                     ? navigate(redirect, { replace: true })
                     : navigate('/dashboard', { replace: true });
             }
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.response.data.error);
 
-            if (response.data.error) {
-                toast.error(response.data.error);
-            }
-        } catch (error) {
-            console.log('err', error);
+            error.response.data.error === 'Incorrect password'
+                ? resetField('password')
+                : reset();
         }
     };
 
@@ -65,7 +67,6 @@ const Login: React.FC = () => {
     const submitHandler = (data: FormValues): void => {
         console.log(data);
         sendLoginData(data);
-        reset();
     };
 
     return (
@@ -95,15 +96,8 @@ const Login: React.FC = () => {
                             })}
                         />
                         {errors.email && (
-                            <div
-                                style={{
-                                    color: 'red',
-                                    fontSize: '12px',
-                                    marginTop: '5px',
-                                    paddingLeft: '5px',
-                                }}
-                            >
-                                {errors?.email.message}
+                            <div className={styles.error_message}>
+                                {errors.email.message}
                             </div>
                         )}
                     </div>
@@ -120,8 +114,8 @@ const Login: React.FC = () => {
                             {...register('password', {
                                 required: 'Password is requared',
                                 minLength: {
-                                    value: 3,
-                                    message: 'Minimum 3 symbols',
+                                    value: 5,
+                                    message: 'Minimum 5 symbols',
                                 },
                                 maxLength: {
                                     value: 50,
@@ -133,14 +127,7 @@ const Login: React.FC = () => {
                         <Row>
                             <Col>
                                 {errors.password && (
-                                    <div
-                                        style={{
-                                            color: 'red',
-                                            fontSize: '12px',
-                                            marginTop: '5px',
-                                            paddingLeft: '5px',
-                                        }}
-                                    >
+                                    <div className={styles.error_message}>
                                         {errors.password.message}
                                     </div>
                                 )}

@@ -32,6 +32,13 @@
     font-weight: 800;
 }
 
+.error_message {
+    color: red;
+    font-size: 12px;
+    padding-left: 5px;
+    margin-top: 5px;
+}
+
 label {
     font-size: 14px;
     font-weight: 600;

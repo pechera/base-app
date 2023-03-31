@@ -23,10 +23,6 @@ type LoginData = {
     password: string;
 };
 
-router.get('/login', (req: Request, res: Response) => {
-    res.send('Login route');
-});
-
 router.post('/login', async (req: Request, res: Response) => {
     const { email, password }: LoginData = req.body;
 
@@ -100,7 +96,7 @@ router.post('/login/google', async (req: Request, res: Response) => {
 
             const { newAccessToken, newRefreshToken } = renewTokens(id);
 
-            return res.json({
+            return res.status(200).json({
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken,
             });
@@ -108,13 +104,13 @@ router.post('/login/google', async (req: Request, res: Response) => {
 
         const { newAccessToken, newRefreshToken } = renewTokens(user.id);
 
-        return res.json({
+        return res.status(200).json({
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
         });
     } catch (error: any) {
         console.log(error);
-        return res.json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 

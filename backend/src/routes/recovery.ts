@@ -42,10 +42,10 @@ router.post('/recovery', async (req: Request, res: Response) => {
         const html = `<div><a href="${process.env.CLIENT_URL}/recovery/${link}">Reset password</a></div>`;
         sendEmail(email, 'Reset password', html);
 
-        return res.json({ message: 'Link sent to your email' });
+        return res.status(200).json({ message: 'Link sent to your email' });
     } catch (error: any) {
         console.log(error);
-        return res.json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 
@@ -58,10 +58,10 @@ router.post('/password/is', async (req: Request, res: Response) => {
             return res.json({ link: false });
         }
 
-        return res.json({ link: true });
+        return res.status(200).json({ link: true });
     } catch (error: any) {
         console.log(error);
-        return res.json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 

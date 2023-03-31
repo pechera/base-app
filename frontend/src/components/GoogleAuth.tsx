@@ -40,12 +40,9 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
                     ? navigate(redirect, { replace: true })
                     : navigate('/dashboard', { replace: true });
             }
-
-            if (response.data.error) {
-                setError(response.data.error);
-            }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
+            setError(error.response.data.error);
         }
     };
 

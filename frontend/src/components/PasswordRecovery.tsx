@@ -74,14 +74,7 @@ const PasswordRecovery: React.FC = () => {
                             })}
                         />
                         {errors.email && (
-                            <div
-                                style={{
-                                    color: 'red',
-                                    fontSize: '12px',
-                                    marginTop: '5px',
-                                    paddingLeft: '5px',
-                                }}
-                            >
+                            <div className={styles.error_message}>
                                 {errors?.email.message}
                             </div>
                         )}
