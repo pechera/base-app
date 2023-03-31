@@ -39,7 +39,7 @@ router.post('/recovery', async (req: Request, res: Response) => {
 
         await redisClient.set(link, user.id, { EX: 1800 }); // EX - key lifetime in seconds 1800
 
-        const html = `<div><a href="http:/localhost:3000/recovery/${link}">Reset password</a></div>`;
+        const html = `<div><a href="${process.env.CLIENT_URL}/recovery/${link}">Reset password</a></div>`;
         sendEmail(email, 'Reset password', html);
 
         return res.json({ message: 'Link sent to your email' });
