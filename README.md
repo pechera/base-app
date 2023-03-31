@@ -8,6 +8,7 @@ Basic setup on MERN stack for your MVP. In this project implemets:
 ✅ Logout\
 ✅ Email activation\
 ✅ Password recovery function\
+✅ Private routes\
 ⬜️ Form validation on frontend and backend both
 ⬜️ Email service via Amazon SES (now it's local SMTP)\
 ⬜️ Profile page where users can change account info
@@ -43,10 +44,13 @@ GOOGLE AUTH\
 `GOOGLE_CLIENT_ID`
 
 Frontend:
-Env dir is /env/.env
+Create .env.development file for dev or .env for prod version
+
+SERVER URL\
+`VITE_SERVE_URL`
 
 GOOGLE AUTH\
-`GOOGLE_CLIENT_ID`
+`VITE_GOOGLE_CLIENT_ID`
 
 ## Run Locally
 

@@ -1,7 +1,12 @@
 import React from 'react';
+import Nav from './partials/NavBar';
 
 const Dashboard = () => {
-    return <div>Dashboard</div>;
+    return (
+        <div>
+            <Nav />
+        </div>
+    );
 };
 
 export default Dashboard;

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
     withCredentials: true,
-    baseURL: import.meta.env.SERVE_URL,
+    baseURL: import.meta.env.VITE_SERVE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -34,8 +34,6 @@ axiosInstance.interceptors.response.use(
 
             const currentRefreshToken = localStorage.getItem('refreshToken');
 
-            console.log('ERROR HANDLED: TRY TO VERIFY REFRESH TOKEN');
-
             if (!currentRefreshToken) {
                 return Promise.reject(error);
             }
@@ -56,14 +54,10 @@ axiosInstance.interceptors.response.use(
 
                 const { accessToken, refreshToken } = response.data;
 
-                console.log('RECIVED NEW ACCESS AND REFRESH TOKENS');
-
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);
 
                 originalRequest.headers.authorization = `Bearer ${accessToken}`;
-
-                console.log('TOKEN CHANGED, RETRY AXIOS REQUEST');
 
                 return axiosInstance(originalRequest);
             } catch (err) {

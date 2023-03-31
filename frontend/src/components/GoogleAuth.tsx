@@ -28,8 +28,6 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
 
             const { accessToken, refreshToken } = response.data;
 
-            console.log(response.data);
-
             if (accessToken && refreshToken) {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);

@@ -65,7 +65,6 @@ const Login: React.FC = () => {
     };
 
     const submitHandler = (data: FormValues): void => {
-        console.log(data);
         sendLoginData(data);
     };
 
