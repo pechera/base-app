@@ -11,12 +11,12 @@ Basic setup app templame on MERN stack for your MVP. In this project implemeting
 ✅ Private routes\
 ✅ Form validation on frontend and backend both\
 ✅ State manager for saving user info around the app\
-✅ React Hot Toasts notifications\  
+✅ React Hot Toasts notifications\
 ⬜️ Integrate React Query\
 ⬜️ Email service via Amazon SES (now it's test SMTP)\
 ⬜️ Profile page where users can change account info
 
-Stack: Typescript, React, React Router, NodeJS, Express, MongoDB, Redis, Nodemailer\
+Stack: Typescript, React, React Router, Zustand, NodeJS, Express, MongoDB, Redis, Nodemailer\
 Styles: Bootstrap
 
 ## Environment Variables
