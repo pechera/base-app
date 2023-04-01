@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
-import styles from './styles/login.module.css';
+import styles from './styles/form.module.css';
 
 type FormValues = {
     password: string;

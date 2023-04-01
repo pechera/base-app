@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import GoogleAuth from './GoogleAuth';
 
-import styles from './styles/login.module.css';
+import styles from './styles/form.module.css';
 
 type FormValues = {
     name: string;

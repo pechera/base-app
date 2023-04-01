@@ -2,7 +2,7 @@ import React from 'react';
 import NavBar from './partials/NavBar';
 import { Container } from 'react-bootstrap';
 
-const Profile = () => {
+const Profile: React.FC = () => {
     return (
         <div>
             <NavBar />

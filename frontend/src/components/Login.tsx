@@ -9,7 +9,7 @@ import GoogleAuth from './GoogleAuth';
 
 import useUserStore from '../store/Store';
 
-import styles from './styles/login.module.css';
+import styles from './styles/form.module.css';
 
 type ResponseData = {
     accessToken: string;

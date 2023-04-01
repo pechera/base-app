@@ -1,16 +1,18 @@
-# MVP base app on Typescript + React + NodeJS
+# MVP base app with Typescript + React + NodeJS
 
-Basic setup on MERN stack for your MVP. In this project implemets:
+Basic setup app templame on MERN stack for your MVP. In this project implemeting:
 
 ✅ Autentification with JWT access and refresh tokens\
 ✅ Autentification via Google OAuth\
 ✅ Registration\
-✅ Logout\
 ✅ Email activation\
+✅ Logout\
 ✅ Password recovery function\
 ✅ Private routes\
-✅ Form validation on frontend and backend both
-✅ State manager for saving user info around the app
+✅ Form validation on frontend and backend both\
+✅ State manager for saving user info around the app\
+✅ React Hot Toasts notifications\  
+⬜️ Integrate React Query\
 ⬜️ Email service via Amazon SES (now it's test SMTP)\
 ⬜️ Profile page where users can change account info
 
@@ -81,12 +83,12 @@ Go to the frontend directory
 Install dependencies
 
 ```bash
-  npm install
+  yarn install
 ```
 
 Start project locally
 
 ```bash
   cd backend && npm run dev
-  cd .. && cd frontend && npm start
+  cd .. && cd frontend && yarn vite
 ```

@@ -11,7 +11,10 @@ const NavBar: React.FC = () => {
     return (
         <Navbar bg="light" expand="lg">
             <Container>
-                <Navbar.Brand onClick={() => navigate('/dashboard')}>
+                <Navbar.Brand
+                    onClick={() => navigate('/dashboard')}
+                    style={{ cursor: 'pointer' }}
+                >
                     BASE APP
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

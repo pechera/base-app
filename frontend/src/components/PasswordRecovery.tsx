@@ -5,15 +5,13 @@ import { useForm } from 'react-hook-form';
 import Axios from '../services/Axios';
 import toast, { Toaster } from 'react-hot-toast';
 
-import styles from './styles/login.module.css';
+import styles from './styles/form.module.css';
 
 type FormValues = {
     email: string;
 };
 
 const PasswordRecovery: React.FC = () => {
-    // const email = useRef();
-
     const {
         register,
         handleSubmit,
