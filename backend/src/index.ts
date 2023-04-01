@@ -36,10 +36,12 @@ import dashboardRoute from './routes/dashboard.js';
 import tokenRoute from './routes/token.js';
 import emailRoute from './routes/email.js';
 import recoveryRoute from './routes/recovery.js';
+import profileRoute from './routes/profile.js';
 
 app.use('/api', loginRoute);
 app.use('/api', registerRoute);
 app.use('/api', dashboardRoute);
+app.use('/api', profileRoute);
 app.use('/api', tokenRoute);
 app.use('/api', emailRoute);
 app.use('/api', recoveryRoute);
