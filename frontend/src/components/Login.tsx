@@ -11,7 +11,7 @@ import useUserStore from '../store/Store';
 
 import styles from './styles/form.module.css';
 
-import { FormValues, LoginResponseData } from '../types/data';
+import { FormValues, LoginResponseData, LoginDataSender } from '../types/data';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
         mode: 'onBlur',
     });
 
-    const sendLoginData = async (data: FormValues): Promise<void> => {
+    const sendLoginData: LoginDataSender = async (data) => {
         try {
             const response = await Axios.post<LoginResponseData>(
                 '/api/login',

@@ -7,9 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import styles from './styles/form.module.css';
 
-type FormValues = {
-    email: string;
-};
+import { RecoveryFormValues, RecoveryDataSender } from '../types/data';
 
 const PasswordRecovery: React.FC = () => {
     const {
@@ -17,11 +15,11 @@ const PasswordRecovery: React.FC = () => {
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<FormValues>({
+    } = useForm<RecoveryFormValues>({
         mode: 'onBlur',
     });
 
-    const sendPasswordRequest = async (data: FormValues): Promise<void> => {
+    const sendPasswordRequest: RecoveryDataSender = async (data) => {
         try {
             const response = await Axios.post('/api/recovery', data);
 
@@ -39,7 +37,7 @@ const PasswordRecovery: React.FC = () => {
         }
     };
 
-    const submitPasswordRecovery = (data: FormValues): void => {
+    const submitPasswordRecovery = (data: RecoveryFormValues): void => {
         sendPasswordRequest(data);
         reset();
     };

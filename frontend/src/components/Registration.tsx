@@ -11,7 +11,11 @@ import styles from './styles/form.module.css';
 
 import useUserStore from '../store/Store';
 
-import { RegisterFormValues, LoginResponseData } from '../types/data';
+import {
+    RegisterDataSender,
+    RegisterFormValues,
+    LoginResponseData,
+} from '../types/data';
 
 const Registration: React.FC = () => {
     const navigate = useNavigate();
@@ -31,9 +35,7 @@ const Registration: React.FC = () => {
         toast.error(error.message);
     };
 
-    const sendRegistrationData = async (
-        data: RegisterFormValues
-    ): Promise<void> => {
+    const sendRegistrationData: RegisterDataSender = async (data) => {
         try {
             const response = await Axios.post<LoginResponseData>(
                 '/api/registration',

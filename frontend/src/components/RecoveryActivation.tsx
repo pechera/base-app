@@ -7,10 +7,10 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import styles from './styles/form.module.css';
 
-type FormValues = {
-    password: string;
-    confirmPassword: string;
-};
+import {
+    RecoveryActiationFormValues,
+    RecoveryActivationDataSender,
+} from '../types/data';
 
 const RecoveryActivation: React.FC = () => {
     const { link } = useParams();
@@ -24,7 +24,7 @@ const RecoveryActivation: React.FC = () => {
         reset,
         watch,
         formState: { errors },
-    } = useForm<FormValues>({
+    } = useForm<RecoveryActiationFormValues>({
         mode: 'onBlur',
     });
 
@@ -46,9 +46,7 @@ const RecoveryActivation: React.FC = () => {
         })();
     }, []);
 
-    const sendPasswordData = async (data: {
-        password: string;
-    }): Promise<void> => {
+    const sendPasswordData: RecoveryActivationDataSender = async (data) => {
         try {
             const response = await Axios.post('/api/password', {
                 link,
@@ -57,7 +55,9 @@ const RecoveryActivation: React.FC = () => {
 
             if (response.data.message) {
                 toast.success(response.data.message);
-                navigate('/login'); // { replace: true }
+                setTimeout(() => {
+                    navigate('/login', { replace: true });
+                }, 1500);
             }
         } catch (error: any) {
             console.log(error);
@@ -65,7 +65,7 @@ const RecoveryActivation: React.FC = () => {
         }
     };
 
-    const submitPasswordRecovery = (data: FormValues) => {
+    const submitPasswordRecovery = (data: RecoveryActiationFormValues) => {
         const password = data.password;
         sendPasswordData({ password });
         reset();
