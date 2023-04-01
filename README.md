@@ -1,6 +1,6 @@
 # MVP base app with Typescript + React + NodeJS
 
-Basic setup app templame on MERN stack for your MVP. In this project implemeting:
+Basic setup app template on MERN stack for your MVP. In this project implemeting:
 
 ✅ Autentification with JWT access and refresh tokens\
 ✅ Autentification via Google OAuth\
@@ -16,14 +16,14 @@ Basic setup app templame on MERN stack for your MVP. In this project implemeting
 ⬜️ Email service via Amazon SES (now it's test SMTP)\
 ⬜️ Profile page where users can change account info
 
-Stack: Typescript, React, React Router, Zustand, NodeJS, Express, MongoDB, Redis, Nodemailer\
+Stack: Typescript, React, Vite, React Router, Zustand, Express, MongoDB, Redis, Nodemailer\
 Styles: Bootstrap
 
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your env/.env file
 
-Backend:
+Backend:\
 `PORT`\
 `DATABASE` // MongoDB connection string\
 \
@@ -45,7 +45,7 @@ REDIS\
 GOOGLE AUTH\
 `GOOGLE_CLIENT_ID`
 
-Frontend:
+Frontend:\
 Create .env.development file for dev or .env for prod version
 
 SERVER URL\
