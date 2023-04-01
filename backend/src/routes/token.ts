@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const router: Router = Router();
 
@@ -7,28 +7,27 @@ const router: Router = Router();
 import renewTokens from '../services/renewTokens.service.js';
 
 router.post('/token', (req: Request, res: Response) => {
-    const { refreshToken }: { refreshToken: string } = req.body;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
-        return res.status(401).json({ error: 'Refresh token is empty' });
+        return res.status(401);
     }
 
-    console.log('start generate new token');
-
     try {
-        const { id, exp }: { id: string; exp: number } = jwt.decode(
-            refreshToken
-        ) as { id: string; exp: number };
+        const { id, exp } = jwt.decode(refreshToken) as JwtPayload;
 
-        const refreshExp = exp;
+        const refreshExp = exp!;
 
         const isRefreshExpired: boolean = Date.now() >= refreshExp * 1000;
 
         if (isRefreshExpired) {
+            console.log('refresh token expired');
             return res.sendStatus(401);
         }
 
         const { newAccessToken, newRefreshToken } = renewTokens(id);
+
+        console.log('sent new tokens');
 
         return res.json({
             accessToken: newAccessToken,

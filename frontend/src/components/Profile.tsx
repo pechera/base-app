@@ -45,9 +45,13 @@ const Profile: React.FC = () => {
     const newPassword = watch('newPassword');
 
     const getProfileData = async () => {
-        const response = await axiosInstance.get<IProfile>('/api/profile');
+        try {
+            const response = await axiosInstance.get<IProfile>('/api/profile');
 
-        return response.data;
+            return response.data;
+        } catch (error: any) {
+            console.log('777', error);
+        }
     };
 
     const { isLoading, error, data } = useQuery('profile', getProfileData);
@@ -216,7 +220,8 @@ const Profile: React.FC = () => {
                                                 type="password"
                                                 placeholder="********"
                                                 className={
-                                                    errors.newPassword ||
+                                                    (!isDisabled &&
+                                                        errors.newPassword) ||
                                                     (errors.newPasswordConfirm &&
                                                         errors
                                                             .newPasswordConfirm
@@ -239,16 +244,20 @@ const Profile: React.FC = () => {
                                                     },
                                                 })}
                                             />
-                                            {errors.newPassword && (
-                                                <div
-                                                    style={{
-                                                        color: 'red',
-                                                        fontSize: '12px',
-                                                    }}
-                                                >
-                                                    {errors.newPassword.message}
-                                                </div>
-                                            )}
+                                            {!isDisabled &&
+                                                errors.newPassword && (
+                                                    <div
+                                                        style={{
+                                                            color: 'red',
+                                                            fontSize: '12px',
+                                                        }}
+                                                    >
+                                                        {
+                                                            errors.newPassword
+                                                                .message
+                                                        }
+                                                    </div>
+                                                )}
                                         </Form.Group>
                                         <Form.Group
                                             className="mt-3"
@@ -261,6 +270,7 @@ const Profile: React.FC = () => {
                                                 type="password"
                                                 placeholder="********"
                                                 className={
+                                                    !isDisabled &&
                                                     errors.newPasswordConfirm
                                                         ? 'form-control mt-1 is-invalid'
                                                         : 'form-control mt-1'
@@ -287,20 +297,21 @@ const Profile: React.FC = () => {
                                                     }
                                                 )}
                                             />
-                                            {errors.newPasswordConfirm && (
-                                                <div
-                                                    style={{
-                                                        color: 'red',
-                                                        fontSize: '12px',
-                                                    }}
-                                                >
-                                                    {
-                                                        errors
-                                                            .newPasswordConfirm
-                                                            .message
-                                                    }
-                                                </div>
-                                            )}
+                                            {!isDisabled &&
+                                                errors.newPasswordConfirm && (
+                                                    <div
+                                                        style={{
+                                                            color: 'red',
+                                                            fontSize: '12px',
+                                                        }}
+                                                    >
+                                                        {
+                                                            errors
+                                                                .newPasswordConfirm
+                                                                .message
+                                                        }
+                                                    </div>
+                                                )}
                                         </Form.Group>
                                     </fieldset>
                                 </Form>

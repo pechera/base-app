@@ -19,6 +19,7 @@ axiosInstance.interceptors.request.use(
     },
 
     (error) => {
+        console.log('999');
         return Promise.reject(error);
     }
 );
@@ -35,13 +36,13 @@ axiosInstance.interceptors.response.use(
 
             const currentRefreshToken = localStorage.getItem('refreshToken');
 
-            if (!currentRefreshToken) {
-                return Promise.reject(error);
-            }
-
             try {
+                if (!currentRefreshToken) {
+                    throw new Error('no refresh token');
+                }
+
                 const response = await axios.post(
-                    `${import.meta.env.SERVE_URL}/api/token`,
+                    `${import.meta.env.VITE_SERVE_URL}/api/token`,
                     {
                         refreshToken: currentRefreshToken,
                     },
@@ -60,12 +61,17 @@ axiosInstance.interceptors.response.use(
 
                 originalRequest.headers.authorization = `Bearer ${accessToken}`;
 
+                console.log('NEW TOKENS HERE');
+
                 return axiosInstance(originalRequest);
-            } catch (err) {
-                localStorage.clear();
-                return Promise.reject(err);
+            } catch (err: any) {
+                err.message === 'no refresh token' ||
+                err.response.status === 401
+                    ? (window.location.href = '/logout')
+                    : Promise.reject(err);
             }
         }
+
         return Promise.reject(error);
     }
 );

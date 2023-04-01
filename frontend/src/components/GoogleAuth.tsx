@@ -37,6 +37,8 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
 
                 const redirect = searchParams.get('redirect');
 
+                console.log(redirect);
+
                 redirect
                     ? navigate(redirect, { replace: true })
                     : navigate('/dashboard', { replace: true });

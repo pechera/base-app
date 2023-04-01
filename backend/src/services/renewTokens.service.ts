@@ -8,7 +8,7 @@ type Tokens = {
 const renewTokens = (id: string): Tokens => {
     // Create Access token
     const newAccessToken: string = jwt.sign({ id }, process.env.TOKEN_SECRET!, {
-        expiresIn: '2h',
+        expiresIn: '1m', // 2h
     });
 
     // Create Refresh token
@@ -16,13 +16,11 @@ const renewTokens = (id: string): Tokens => {
         { id },
         process.env.TOKEN_SECRET!,
         {
-            expiresIn: '24h',
+            expiresIn: '2m', //24h
         }
     );
 
-    const tokens: Tokens = { newAccessToken, newRefreshToken };
-
-    return tokens;
+    return { newAccessToken, newRefreshToken };
 };
 
 export default renewTokens;
