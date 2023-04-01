@@ -31,7 +31,7 @@ router.get('/dashboard', auth, async (req: Request, res: Response) => {
         }
     } catch (error: any) {
         console.log(error);
-        res.sendStatus(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
