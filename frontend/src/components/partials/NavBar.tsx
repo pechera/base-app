@@ -38,7 +38,7 @@ const NavBar: React.FC = () => {
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item
-                                onClick={() => navigate('/logout')}
+                                href="/logout"
                                 className="text-danger"
                             >
                                 Logout

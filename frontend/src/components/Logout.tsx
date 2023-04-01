@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 import useUserStore from '../store/Store';
 
 const Logout: React.FC = () => {
-    const navigate = useNavigate();
+    const { isAuth, logoutUser } = useUserStore();
 
-    const { logoutUser } = useUserStore();
-
-    useEffect(() => {
+    if (isAuth) {
         logoutUser();
         localStorage.clear();
+    }
 
-        navigate('/login', { replace: true });
-    }, []);
-    return <div>Logout...</div>;
+    return <Navigate to="/login" />;
 };
 
 export default Logout;

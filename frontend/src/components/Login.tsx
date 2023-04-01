@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Axios from '../services/Axios';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link, Navigate } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
@@ -16,7 +16,7 @@ import { FormValues, LoginResponseData, LoginDataSender } from '../types/data';
 const Login: React.FC = () => {
     const navigate = useNavigate();
 
-    const { loginUser } = useUserStore();
+    const { isAuth, loginUser } = useUserStore();
 
     const [searchParams, setSearchParams] = useSearchParams({});
 
@@ -68,6 +68,10 @@ const Login: React.FC = () => {
     const submitHandler = (data: FormValues): void => {
         sendLoginData(data);
     };
+
+    if (isAuth) {
+        return <Navigate to="/dashboard" />;
+    }
 
     return (
         <div className={styles.auth_form__container}>

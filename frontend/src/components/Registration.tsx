@@ -1,7 +1,6 @@
 import React from 'react';
 import Axios from '../services/Axios';
-import { useNavigate, Link } from 'react-router-dom';
-import { Form, Row, Col } from 'react-bootstrap';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -20,7 +19,7 @@ import {
 const Registration: React.FC = () => {
     const navigate = useNavigate();
 
-    const { loginUser } = useUserStore();
+    const { isAuth, loginUser } = useUserStore();
 
     const {
         register,
@@ -63,6 +62,10 @@ const Registration: React.FC = () => {
         sendRegistrationData(data);
         reset();
     };
+
+    if (isAuth) {
+        return <Navigate to="/dashboard" />;
+    }
     return (
         <div className={styles.auth_form__container}>
             <form
@@ -70,7 +73,7 @@ const Registration: React.FC = () => {
                 onSubmit={handleSubmit(submitHandler)}
             >
                 <div className={styles.auth_form__content}>
-                    <h3 className={styles.auth_form__title}>Sign In</h3>
+                    <h3 className={styles.auth_form__title}>Sign Up</h3>
                     <div className="form-group mt-3">
                         <label>Full Name</label>
                         <input
@@ -84,7 +87,7 @@ const Registration: React.FC = () => {
                             {...register('name', {
                                 required: 'Name is requared',
                                 minLength: {
-                                    value: 2,
+                                    value: 3,
                                     message: 'Minimum 3 symbols',
                                 },
                                 maxLength: {
@@ -145,24 +148,11 @@ const Registration: React.FC = () => {
                                 },
                             })}
                         />
-
-                        <Row>
-                            <Col>
-                                {errors.password && (
-                                    <div className={styles.error_message}>
-                                        {errors.password.message}
-                                    </div>
-                                )}
-                            </Col>
-                            <Col>
-                                <Form.Text className="d-flex text-muted justify-content-end">
-                                    <span style={{ fontSize: '12px' }}>
-                                        Forgot{' '}
-                                        <Link to="/recovery">password?</Link>
-                                    </span>
-                                </Form.Text>
-                            </Col>
-                        </Row>
+                        {errors.password && (
+                            <div className={styles.error_message}>
+                                {errors.password.message}
+                            </div>
+                        )}
                     </div>
                     <div className="d-grid gap-2 mt-4">
                         <button type="submit" className="btn btn-primary">
