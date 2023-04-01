@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 const router: Router = Router();
@@ -10,49 +10,59 @@ import auth from '../middlewares/auth.middleware.js';
 // DATABASE SCHEMAS
 import User from '../models/User.model.js';
 
+// TYPES
+import { IUser } from '../types/data.js';
+
 router.get('/profile', auth, async (req: Request, res: Response) => {
     const accessToken = req.headers.authorization!;
 
     try {
-        const { id }: { id: string } = jwt.decode(
-            accessToken.split(' ')[1]
-        ) as {
-            id: string;
-        };
+        const { id } = jwt.decode(accessToken.split(' ')[1]) as JwtPayload;
 
         const user = await User.findOne({ id });
 
-        if (user) {
-            return res.status(200).json({
-                name: user.name,
-                email: user.email,
-                activated: user.activated,
-            });
-        }
+        if (!user)
+            return res.sendStatus(500).json({ message: 'User not found' });
+
+        return res.status(200).json({
+            name: user.name,
+            email: user.email,
+            activated: user.activated,
+        });
     } catch (error: any) {
         console.log(error);
         res.status(500).json({ message: error.message });
     }
 });
 
+interface IPasswordsToSend {
+    currentPassword: string;
+    newPassword: string;
+}
+
 router.post('/profile/password', auth, async (req: Request, res: Response) => {
     const accessToken = req.headers.authorization!;
-    const { password }: { password: string } = req.body;
+    const { currentPassword, newPassword }: IPasswordsToSend = req.body;
 
     try {
-        const { id }: { id: string } = jwt.decode(
-            accessToken.split(' ')[1]
-        ) as {
-            id: string;
-        };
+        const { id } = jwt.decode(accessToken.split(' ')[1]) as JwtPayload;
 
         const user = await User.findOne({ id });
 
         if (!user) return res.status(500).json({ message: 'User not found' });
 
+        // Checking if the current password is correct
+        const isPasswordCorrect: boolean = await bcrypt.compare(
+            currentPassword,
+            user.password
+        );
+
+        if (!isPasswordCorrect)
+            return res.status(400).json({ message: 'Wrong password' });
+
         // Hashing the password
         const salt: string = await bcrypt.genSalt(10);
-        const hashedPassword: string = await bcrypt.hash(password, salt);
+        const hashedPassword: string = await bcrypt.hash(newPassword, salt);
 
         user.password = hashedPassword;
 

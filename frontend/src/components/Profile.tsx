@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 import NavBar from './partials/NavBar';
 import { Container, Form, Button, Modal } from 'react-bootstrap';
 import axiosInstance from '../services/axiosInstance';
-import { useQueryClient, useQuery, useMutation } from 'react-query';
+import {
+    useQueryClient,
+    useQuery,
+    useMutation,
+    MutationFunction,
+} from 'react-query';
 import { useForm } from 'react-hook-form';
+import toast, { Toast, Toaster } from 'react-hot-toast';
 
 interface IProfile {
     name: string;
@@ -23,13 +29,20 @@ interface IChangePassword {
     newPasswordConfirm: string;
 }
 
+interface IPasswordsToSend {
+    currentPassword: string;
+    newPassword: string;
+}
+
+interface IPaswordsResponse {
+    message: string;
+}
+
 const Profile: React.FC = () => {
     const [email, setEmail] = useState<string>('');
+
     const [changeEmail, setChangeEmail] = useState<boolean>(false);
-
     const [changePassword, setChangePassword] = useState<boolean>(false);
-
-    const queryClient = useQueryClient();
 
     const {
         register,
@@ -44,60 +57,70 @@ const Profile: React.FC = () => {
     const currentPassword = watch('currentPassword');
     const newPassword = watch('newPassword');
 
-    const getProfileData = async () => {
-        try {
-            const response = await axiosInstance.get<IProfile>('/api/profile');
+    const isDisabled: boolean =
+        currentPassword === undefined || currentPassword.length < 5;
 
-            return response.data;
-        } catch (error: any) {
-            console.log('777', error);
-        }
+    const getProfileData = async () => {
+        const { data } = await axiosInstance.get<IProfile>('/api/profile');
+        return data;
     };
 
     const { isLoading, error, data } = useQuery('profile', getProfileData);
 
-    const sendChangePassword = async (data) => {
-        try {
-            const response = await axiosInstance.post(
-                '/api/profile/password',
-                data
-            );
-        } catch (error) {
-            console.log(error);
-        }
+    const sendChangePassword: MutationFunction<
+        IPaswordsResponse,
+        IPasswordsToSend
+    > = async (passwordsData) => {
+        const { data } = await axiosInstance.post(
+            '/api/profile/password',
+            passwordsData
+        );
+
+        return data;
     };
 
-    const changePasswordMutation = useMutation(
-        (data) => sendChangePassword(data),
-        {
-            onSuccess: (response) => {
-                console.log(response);
-            },
-            // onSettled: () => {
-            //     queryClient.invalidateQueries(['projects']);
-            // },
-        }
-    );
+    const changePasswordMutation = useMutation<
+        IPaswordsResponse,
+        unknown,
+        IPasswordsToSend
+    >((data) => sendChangePassword(data), {
+        onMutate: () => {
+            toast.loading('Changing password...', {
+                id: 'load',
+            });
+        },
+        onError: (error: any) => {
+            toast.error(error.response.data.message, {
+                id: 'load',
+            });
+        },
+        onSuccess: (response) => {
+            toast.success(response.message, {
+                id: 'load',
+            });
+            setChangePassword(false);
+        },
+        onSettled: () => {
+            reset();
+        },
+    });
 
-    const changePasswordHandler = (data) => {
-        changePasswordMutation.mutate(data);
+    const changePasswordHandler = (data: IChangePassword): void => {
+        const currentPassword = data.currentPassword;
+        const newPassword = data.newPassword;
+
+        changePasswordMutation.mutate({ currentPassword, newPassword });
     };
-
-    const isDisabled: boolean =
-        currentPassword === undefined || currentPassword.length < 5;
-
-    // Email рассылка
 
     return (
         <div>
             <NavBar />
             <Container className="p-3">
                 <h1>Profile</h1>
+                {/* {error && <div>Error: {error.message}</div>} */}
+                {isLoading && <div>Loading...</div>}
                 {data && (
-                    <Form
-                        className="p-2 mt-3"
-                        onSubmit={handleSubmit(changePasswordHandler)}
-                    >
+                    <Form className="p-2 mt-3">
                         <Form.Group className="mt-3" controlId="formUsername">
                             <Form.Label>Username</Form.Label>
                             <div>{data.name}</div>
@@ -163,12 +186,14 @@ const Profile: React.FC = () => {
                             aria-labelledby="contained-modal-title-vcenter"
                             centered
                         >
-                            <Modal.Header closeButton>
-                                <Modal.Title>Change password</Modal.Title>
-                            </Modal.Header>
+                            <Form
+                                onSubmit={handleSubmit(changePasswordHandler)}
+                            >
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Change password</Modal.Title>
+                                </Modal.Header>
 
-                            <Modal.Body>
-                                <Form>
+                                <Modal.Body>
                                     <Form.Group
                                         className="mt-3"
                                         controlId="formCurrentPassword"
@@ -314,18 +339,19 @@ const Profile: React.FC = () => {
                                                 )}
                                         </Form.Group>
                                     </fieldset>
-                                </Form>
-                            </Modal.Body>
-
-                            <Modal.Footer>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setChangePassword(false)}
-                                >
-                                    Close
-                                </Button>
-                                <Button variant="primary">Save changes</Button>
-                            </Modal.Footer>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={() => setChangePassword(false)}
+                                    >
+                                        Close
+                                    </Button>
+                                    <Button variant="primary" type="submit">
+                                        Save changes
+                                    </Button>
+                                </Modal.Footer>
+                            </Form>
                         </Modal>
                         <div
                             className="mt-3"
@@ -343,6 +369,7 @@ const Profile: React.FC = () => {
                         </Button>
                     </Form>
                 )}
+                <Toaster />
             </Container>
         </div>
     );
