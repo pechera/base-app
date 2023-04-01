@@ -65,6 +65,7 @@ router.post('/registration', async (req: Request, res: Response) => {
         return res.status(200).json({
             accessToken: newAccessToken,
             refreshToken: newRefreshToken,
+            username: name,
         });
     } catch (error: any) {
         console.log(error);

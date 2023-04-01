@@ -55,12 +55,12 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 router.post('/login/google', async (req: Request, res: Response) => {
-    const { client_id, jwtToken } = req.body;
+    const { client_id, credential } = req.body;
 
     try {
         // Call the verifyIdToken to varify and decode it
         const ticket = await client.verifyIdToken({
-            idToken: jwtToken,
+            idToken: credential,
             audience: client_id,
         });
 

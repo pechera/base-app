@@ -5,6 +5,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import useUserStore from '../store/Store';
 
+import { GoogleDataSender, LoginResponseData } from '../types/data';
+
 type GoogleAuthProps = {
     setError: (error: string) => void;
 };
@@ -15,15 +17,15 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
 
     const { loginUser } = useUserStore();
 
-    const sendGoogleData = async (
-        clientId: string,
-        jwtToken: string
-    ): Promise<void> => {
+    const sendGoogleData: GoogleDataSender = async (clientId, credential) => {
         try {
-            const response = await Axios.post('/api/login/google', {
-                clientId,
-                jwtToken,
-            });
+            const response = await Axios.post<LoginResponseData>(
+                '/api/login/google',
+                {
+                    clientId,
+                    credential,
+                }
+            );
 
             const { accessToken, refreshToken, username } = response.data;
 

@@ -33,7 +33,9 @@ const RecoveryActivation: React.FC = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response = await Axios.post('/api/password/is', { link });
+                const response = await Axios.post('/api/password/is', {
+                    link,
+                });
 
                 if (response.data.link) {
                     setIsLinkValid(true);

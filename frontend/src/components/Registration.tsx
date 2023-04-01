@@ -9,21 +9,21 @@ import GoogleAuth from './GoogleAuth';
 
 import styles from './styles/form.module.css';
 
-type FormValues = {
-    name: string;
-    email: string;
-    password: string;
-};
+import useUserStore from '../store/Store';
+
+import { RegisterFormValues, LoginResponseData } from '../types/data';
 
 const Registration: React.FC = () => {
     const navigate = useNavigate();
+
+    const { loginUser } = useUserStore();
 
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<FormValues>({
+    } = useForm<RegisterFormValues>({
         mode: 'onBlur',
     });
 
@@ -31,19 +31,23 @@ const Registration: React.FC = () => {
         toast.error(error.message);
     };
 
-    const sendRegistrationData = async (data: FormValues): Promise<void> => {
+    const sendRegistrationData = async (
+        data: RegisterFormValues
+    ): Promise<void> => {
         try {
-            const response = await Axios.post(
+            const response = await Axios.post<LoginResponseData>(
                 '/api/registration',
 
                 data
             );
 
-            const { accessToken, refreshToken } = response.data;
+            const { accessToken, refreshToken, username } = response.data;
 
             if (accessToken && refreshToken) {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', refreshToken);
+
+                loginUser(username);
 
                 navigate('/dashboard');
             }
@@ -53,7 +57,7 @@ const Registration: React.FC = () => {
         }
     };
 
-    const submitHandler = (data: FormValues) => {
+    const submitHandler = (data: RegisterFormValues) => {
         sendRegistrationData(data);
         reset();
     };

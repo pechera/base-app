@@ -11,16 +11,7 @@ import useUserStore from '../store/Store';
 
 import styles from './styles/form.module.css';
 
-type ResponseData = {
-    accessToken: string;
-    refreshToken: string;
-    username: string;
-};
-
-type FormValues = {
-    email: string;
-    password: string;
-};
+import { FormValues, LoginResponseData } from '../types/data';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -41,10 +32,12 @@ const Login: React.FC = () => {
 
     const sendLoginData = async (data: FormValues): Promise<void> => {
         try {
-            const response = await Axios.post('/api/login', data);
+            const response = await Axios.post<LoginResponseData>(
+                '/api/login',
+                data
+            );
 
-            const { accessToken, refreshToken, username }: ResponseData =
-                response.data;
+            const { accessToken, refreshToken, username } = response.data;
 
             if (accessToken && refreshToken) {
                 localStorage.setItem('accessToken', accessToken);
