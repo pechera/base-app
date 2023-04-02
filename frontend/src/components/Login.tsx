@@ -1,6 +1,6 @@
 import React from 'react';
 import { Axios } from '../services/Axios';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
@@ -11,11 +11,14 @@ import useUserStore from '../store/Store';
 
 import styles from './styles/form.module.css';
 
-import useUserHook from '../services/useUserHook';
+import useUserHook from '../hooks/useUserHook';
 
 import { FormValues, LoginResponseData, LoginDataSender } from '../types/data';
 
 const Login: React.FC = () => {
+    const [searchParams, setSearchParams] = useSearchParams({});
+    const navigate = useNavigate();
+
     const { isAuth } = useUserStore();
 
     const { loginUserService } = useUserHook();
@@ -44,6 +47,12 @@ const Login: React.FC = () => {
             };
 
             loginUserService(loginData);
+
+            const redirect = searchParams.get('redirect');
+
+            redirect
+                ? navigate(redirect, { replace: true })
+                : navigate('/dashboard', { replace: true });
         } catch (error: any) {
             console.log(error);
             toast.error(error.response.data.error);

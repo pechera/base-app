@@ -1,4 +1,3 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUserStore from '../store/Store';
 
 import { LoginResponseData } from '../types/data';
@@ -18,9 +17,6 @@ interface IUserHook {
 }
 
 const useUserHook: IUserHook = () => {
-    const [searchParams, setSearchParams] = useSearchParams({});
-    const navigate = useNavigate();
-
     const { loginUser, logoutUser } = useUserStore();
 
     const loginUserService: ILoginUser = (data) => {
@@ -32,12 +28,6 @@ const useUserHook: IUserHook = () => {
         localStorage.setItem('refreshToken', refreshToken);
 
         loginUser(username);
-
-        const redirect = searchParams.get('redirect');
-
-        redirect
-            ? navigate(redirect, { replace: true })
-            : navigate('/dashboard', { replace: true });
     };
 
     const logoutUserService = (): void => {
@@ -46,8 +36,6 @@ const useUserHook: IUserHook = () => {
         localStorage.removeItem('storedata');
 
         logoutUser();
-
-        navigate('/login', { replace: true });
     };
 
     const test = (): void => {

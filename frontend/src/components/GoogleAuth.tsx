@@ -1,8 +1,9 @@
 import React from 'react';
 import { Axios } from '../services/Axios';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import useUserHook from '../services/useUserHook';
+import useUserHook from '../hooks/useUserHook';
 
 import { GoogleDataSender, LoginResponseData } from '../types/data';
 
@@ -11,6 +12,9 @@ type GoogleAuthProps = {
 };
 
 const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
+    const [searchParams, setSearchParams] = useSearchParams({});
+    const navigate = useNavigate();
+
     const { loginUserService } = useUserHook();
 
     const sendGoogleData: GoogleDataSender = async (clientId, credential) => {
@@ -30,6 +34,12 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
             };
 
             loginUserService(loginData);
+
+            const redirect = searchParams.get('redirect');
+
+            redirect
+                ? navigate(redirect, { replace: true })
+                : navigate('/dashboard', { replace: true });
         } catch (error: any) {
             console.log(error);
             setError(error.response.data.error);

@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import useUserStore from '../store/Store';
 
-import useUserHook from '../services/useUserHook';
+import useUserHook from '../hooks/useUserHook';
 
 const Logout: React.FC = () => {
     const { isAuth } = useUserStore();
 
     const { logoutUserService } = useUserHook();
 
-    if (isAuth) logoutUserService();
+    useLayoutEffect(() => {
+        if (isAuth) logoutUserService();
+    }, []);
 
     return <Navigate to="/login" />;
 };
