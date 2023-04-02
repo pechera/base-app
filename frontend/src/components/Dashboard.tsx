@@ -6,7 +6,9 @@ const Dashboard: React.FC = () => {
     return (
         <div>
             <NavBar />
-            <Container>Dashboard</Container>
+            <Container>
+                <h1>Dashboard</h1>
+            </Container>
         </div>
     );
 };

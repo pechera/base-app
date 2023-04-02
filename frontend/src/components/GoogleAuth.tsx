@@ -2,10 +2,11 @@ import React from 'react';
 import { Axios } from '../services/Axios';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useMutation, MutationFunction } from 'react-query';
 
 import useUserHook from '../hooks/useUserHook';
 
-import { GoogleDataSender, LoginResponseData } from '../types/data';
+import { GoogleLoginData, LoginResponseData } from '../types/data';
 
 type GoogleAuthProps = {
     setError: (error: string) => void;
@@ -17,16 +18,26 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
 
     const { loginUserService } = useUserHook();
 
-    const sendGoogleData: GoogleDataSender = async (clientId, credential) => {
-        try {
-            const { data } = await Axios.post<LoginResponseData>(
-                '/api/login/google',
-                {
-                    clientId,
-                    credential,
-                }
-            );
+    const sendGoogleData: MutationFunction<
+        LoginResponseData,
+        GoogleLoginData
+    > = async (loginData) => {
+        const { data } = await Axios.post('/api/login/google', loginData);
 
+        return data;
+    };
+
+    const loginGoogleMutation = useMutation<
+        LoginResponseData,
+        unknown,
+        GoogleLoginData
+    >(sendGoogleData, {
+        onError: (error: any) => {
+            console.log(error);
+            setError(error.response.data.error);
+        },
+        onSuccess: (data) => {
+            console.log('success');
             const loginData = {
                 accessToken: data.accessToken,
                 refreshToken: data.refreshToken,
@@ -40,19 +51,26 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
             redirect
                 ? navigate(redirect, { replace: true })
                 : navigate('/dashboard', { replace: true });
-        } catch (error: any) {
-            console.log(error);
-            setError(error.response.data.error);
-        }
-    };
+        },
+        onSettled: () => {
+            console.log('onSettled');
+        },
+    });
 
     const handleGoogleError = () => {
         setError('Google Auth Error');
     };
 
     const responseMessage = (response: CredentialResponse) => {
-        const { clientId, credential } = response;
-        sendGoogleData(clientId!, credential!);
+        const clientId = response.clientId as string;
+        const credential = response.credential as string;
+
+        const googleLoginData: GoogleLoginData = {
+            clientId,
+            credential,
+        };
+
+        loginGoogleMutation.mutate(googleLoginData);
     };
 
     return (

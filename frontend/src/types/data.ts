@@ -10,13 +10,18 @@ export interface FormValues {
     password: string;
 }
 
-export interface LoginDataSender {
-    ({ email, password }: FormValues): Promise<void>;
+// export interface LoginDataSender {
+//     ({ email, password }: FormValues): Promise<void>;
+// }
+
+export interface GoogleLoginData {
+    clientId: string;
+    credential: string;
 }
 
-export interface GoogleDataSender {
-    (clientId: string, credential: string): Promise<void>;
-}
+// export interface GoogleDataSender {
+//     (clientId: string, credential: string): Promise<void>;
+// }
 
 // Regostration
 

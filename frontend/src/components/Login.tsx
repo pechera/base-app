@@ -3,6 +3,7 @@ import { Axios } from '../services/Axios';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
 import { RegisterOptions, useForm } from 'react-hook-form';
+import { useMutation, MutationFunction } from 'react-query';
 import toast, { Toaster } from 'react-hot-toast';
 
 import GoogleAuth from './GoogleAuth';
@@ -13,7 +14,7 @@ import styles from './styles/form.module.css';
 
 import useUserHook from '../hooks/useUserHook';
 
-import { FormValues, LoginResponseData, LoginDataSender } from '../types/data';
+import { FormValues, LoginResponseData } from '../types/data';
 
 const Login: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams({});
@@ -53,42 +54,51 @@ const Login: React.FC = () => {
         },
     };
 
-    const sendLoginData: LoginDataSender = async (loginFormData) => {
-        try {
-            const { data } = await Axios.post<LoginResponseData>(
-                '/api/login',
-                loginFormData
-            );
+    const sendLoginData: MutationFunction<
+        LoginResponseData,
+        FormValues
+    > = async (loginFormData) => {
+        const { data } = await Axios.post('/api/login', loginFormData);
 
-            const loginData = {
-                accessToken: data.accessToken,
-                refreshToken: data.refreshToken,
-                username: data.username,
-            };
-
-            loginUserService(loginData);
-
-            const redirect = searchParams.get('redirect');
-
-            redirect
-                ? navigate(redirect, { replace: true })
-                : navigate('/dashboard', { replace: true });
-        } catch (error: any) {
-            console.log(error);
-            toast.error(error.response.data.error);
-
-            error.response.data.error === 'Incorrect password'
-                ? resetField('password')
-                : reset();
-        }
+        return data;
     };
+
+    const loginMutation = useMutation<LoginResponseData, unknown, FormValues>(
+        sendLoginData,
+        {
+            onError: (error: any) => {
+                console.log('error');
+                toast.error(error.response.data.error);
+
+                error.response.data.error === 'Incorrect password'
+                    ? resetField('password')
+                    : reset();
+            },
+            onSuccess: (data) => {
+                console.log('success');
+                const loginData = {
+                    accessToken: data.accessToken,
+                    refreshToken: data.refreshToken,
+                    username: data.username,
+                };
+
+                loginUserService(loginData);
+
+                const redirect = searchParams.get('redirect');
+
+                redirect
+                    ? navigate(redirect, { replace: true })
+                    : navigate('/dashboard', { replace: true });
+            },
+        }
+    );
 
     const setErrorHandler = (error: any): void => {
         toast.error(error.message);
     };
 
     const submitHandler = (loginFormData: FormValues): void => {
-        sendLoginData(loginFormData);
+        loginMutation.mutate(loginFormData);
     };
 
     if (isAuth) {
