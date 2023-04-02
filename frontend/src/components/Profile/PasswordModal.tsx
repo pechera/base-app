@@ -1,4 +1,4 @@
-import React, { Validator } from 'react';
+import React from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { RegisterOptions, useForm } from 'react-hook-form';
 import { useMutation, MutationFunction } from 'react-query';
@@ -81,7 +81,7 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({
             toast.success(response.message, {
                 id: 'passLoad',
             });
-            hideModal();
+            setTimeout(() => hideModal(), 1000);
         },
         onSettled: () => reset(),
     });
