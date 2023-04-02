@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
-import { RegisterOptions, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Axios } from '../services/Axios';
 import { useMutation, MutationFunction } from 'react-query';
 import toast, { Toaster } from 'react-hot-toast';

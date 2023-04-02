@@ -2,7 +2,7 @@ import React from 'react';
 import { Axios } from '../services/Axios';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
-import { RegisterOptions, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation, MutationFunction } from 'react-query';
 import toast, { Toaster } from 'react-hot-toast';
 

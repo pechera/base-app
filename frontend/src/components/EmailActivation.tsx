@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useMutation, MutationFunction } from 'react-query';
@@ -10,8 +10,8 @@ import { IActivationLink, IOneMessageResponse } from '../types/data';
 const EmailActivation: React.FC = () => {
     const { link } = useParams();
 
-    const activateEmail: MutationFunction<IOneMessageResponse, IActivationLink> = async () => {
-        const { data } = await Axios.post('/api/mail', { link });
+    const activateEmail: MutationFunction<IOneMessageResponse, IActivationLink> = async (activationData) => {
+        const { data } = await Axios.post('/api/mail', activationData);
         return data;
     };
 

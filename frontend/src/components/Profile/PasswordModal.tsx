@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import { RegisterOptions, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation, MutationFunction } from 'react-query';
 import toast, { Toaster } from 'react-hot-toast';
 import { axiosInstance } from '../../services/Axios';

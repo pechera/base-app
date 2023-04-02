@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import connectionMongo from './config/mongo.config.js';
+import { connectionRedis } from './config/redis.config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,9 +15,12 @@ dotenv.config({ path: path.join(__dirname, 'env/.env') });
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Temporary solution for Nodemailer
 
-// Connect to MongoDB
 (async () => {
+    // Connect to MongoDB
     await connectionMongo();
+
+    // Connect to Redis
+    await connectionRedis();
 })();
 
 const app = express();

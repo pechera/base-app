@@ -8,4 +8,13 @@ const redisClient = createClient({
     },
 });
 
-export default redisClient;
+const connectionRedis = async (): Promise<void> => {
+    try {
+        await redisClient.connect();
+        console.log('Redis connected');
+    } catch (error: any) {
+        console.log('Redis', error);
+    }
+};
+
+export { redisClient, connectionRedis };

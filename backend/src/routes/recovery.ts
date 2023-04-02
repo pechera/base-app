@@ -4,11 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const router: Router = Router();
 
-import redisClient from '../config/redis.config.js';
-
-redisClient.connect().then(() => {
-    console.log('redis connected');
-});
+import { redisClient } from '../config/redis.config.js';
 
 // DATABASE SCHEMAS
 import User from '../models/User.model.js';
@@ -24,8 +20,6 @@ router.post('/recovery', async (req: Request, res: Response) => {
 
     try {
         const user = await User.findOne({ email });
-
-        console.log(user);
 
         if (!user || !user.activated) {
             throw new Error('User not found');
@@ -76,9 +70,7 @@ router.post('/password', async (req: Request, res: Response) => {
         const id = await redisClient.get(link);
 
         if (!id) {
-            return res
-                .status(400)
-                .json({ error: 'Link not found or expiered' });
+            return res.status(400).json({ error: 'Link not found or expiered' });
         }
 
         const user = await User.findOne({ id });

@@ -11,6 +11,7 @@ import PasswordRecovery from './components/PasswordRecovery';
 
 import Private from './router/Private';
 import Profile from './components/Profile/Profile';
+import ChangeEmailConfirm from './components/Profile/ChangeEmailConfirm';
 
 const App: React.FC = () => {
     const queryClient = new QueryClient();
@@ -18,19 +19,14 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={<Navigate replace to="/dashboard" />}
-                    />
+                    <Route path="/" element={<Navigate replace to="/dashboard" />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/registration" element={<Registration />} />
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/recovery" element={<PasswordRecovery />} />
                     <Route path="/mail/:link" element={<MailActivation />} />
-                    <Route
-                        path="/recovery/:link"
-                        element={<RecoveryActivation />}
-                    />
+                    <Route path="/confirm/:tempLink" element={<ChangeEmailConfirm />} />
+                    <Route path="/recovery/:link" element={<RecoveryActivation />} />
                     <Route
                         path="/dashboard"
                         element={
@@ -47,10 +43,7 @@ const App: React.FC = () => {
                             </Private>
                         }
                     />
-                    <Route
-                        path="*"
-                        element={<div>There's nothing here: 404!</div>}
-                    />
+                    <Route path="*" element={<div>There's nothing here: 404!</div>} />
                 </Routes>
             </BrowserRouter>
         </QueryClientProvider>
