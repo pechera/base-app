@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './partials/NavBar';
 import { Container, Form, Button, Modal } from 'react-bootstrap';
-import axiosInstance from '../services/axiosInstance';
+import { axiosInstance } from '../services/Axios';
 import {
     useQueryClient,
     useQuery,

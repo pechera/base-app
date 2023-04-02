@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import Axios from '../services/Axios';
+import { Axios } from '../services/Axios';
 import toast, { Toaster } from 'react-hot-toast';
 
 import styles from './styles/form.module.css';

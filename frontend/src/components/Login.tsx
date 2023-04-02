@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Axios from '../services/Axios';
+import { Axios } from '../services/Axios';
 import { useNavigate, useSearchParams, Link, Navigate } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
-import Axios from '../services/Axios';
+import { Axios } from '../services/Axios';
 
-const EmailActivation = () => {
+const EmailActivation: React.FC = () => {
     const { link } = useParams();
 
     useEffect(() => {

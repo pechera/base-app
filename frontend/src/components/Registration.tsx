@@ -1,5 +1,5 @@
 import React from 'react';
-import Axios from '../services/Axios';
+import { Axios } from '../services/Axios';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';

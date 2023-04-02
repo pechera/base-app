@@ -1,5 +1,5 @@
 import React from 'react';
-import Axios from '../services/Axios';
+import { Axios } from '../services/Axios';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
