@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { Axios } from '../services/Axios';
-import { useNavigate, useSearchParams, Link, Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
@@ -11,14 +11,14 @@ import useUserStore from '../store/Store';
 
 import styles from './styles/form.module.css';
 
+import useUserHook from '../services/useUserHook';
+
 import { FormValues, LoginResponseData, LoginDataSender } from '../types/data';
 
 const Login: React.FC = () => {
-    const navigate = useNavigate();
+    const { isAuth } = useUserStore();
 
-    const { isAuth, loginUser } = useUserStore();
-
-    const [searchParams, setSearchParams] = useSearchParams({});
+    const { loginUserService } = useUserHook();
 
     const {
         register,
@@ -30,27 +30,20 @@ const Login: React.FC = () => {
         mode: 'onBlur',
     });
 
-    const sendLoginData: LoginDataSender = async (data) => {
+    const sendLoginData: LoginDataSender = async (loginFormData) => {
         try {
-            const response = await Axios.post<LoginResponseData>(
+            const { data } = await Axios.post<LoginResponseData>(
                 '/api/login',
-                data
+                loginFormData
             );
 
-            const { accessToken, refreshToken, username } = response.data;
+            const loginData = {
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+                username: data.username,
+            };
 
-            if (accessToken && refreshToken) {
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
-
-                loginUser(username);
-
-                const redirect = searchParams.get('redirect');
-
-                redirect
-                    ? navigate(redirect, { replace: true })
-                    : navigate('/dashboard', { replace: true });
-            }
+            loginUserService(loginData);
         } catch (error: any) {
             console.log(error);
             toast.error(error.response.data.error);
@@ -65,8 +58,8 @@ const Login: React.FC = () => {
         toast.error(error.message);
     };
 
-    const submitHandler = (data: FormValues): void => {
-        sendLoginData(data);
+    const submitHandler = (loginFormData: FormValues): void => {
+        sendLoginData(loginFormData);
     };
 
     if (isAuth) {

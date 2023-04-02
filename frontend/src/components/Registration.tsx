@@ -1,10 +1,11 @@
 import React from 'react';
 import { Axios } from '../services/Axios';
-import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 
 import GoogleAuth from './GoogleAuth';
+import useUserHook from '../services/useUserHook';
 
 import styles from './styles/form.module.css';
 
@@ -17,9 +18,9 @@ import {
 } from '../types/data';
 
 const Registration: React.FC = () => {
-    const navigate = useNavigate();
+    const { isAuth } = useUserStore();
 
-    const { isAuth, loginUser } = useUserStore();
+    const { loginUserService } = useUserHook();
 
     const {
         register,
@@ -34,32 +35,29 @@ const Registration: React.FC = () => {
         toast.error(error.message);
     };
 
-    const sendRegistrationData: RegisterDataSender = async (data) => {
+    const sendRegistrationData: RegisterDataSender = async (registerData) => {
         try {
-            const response = await Axios.post<LoginResponseData>(
+            const { data } = await Axios.post<LoginResponseData>(
                 '/api/registration',
 
-                data
+                registerData
             );
 
-            const { accessToken, refreshToken, username } = response.data;
+            const loginData = {
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+                username: data.username,
+            };
 
-            if (accessToken && refreshToken) {
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
-
-                loginUser(username);
-
-                navigate('/dashboard');
-            }
+            loginUserService(loginData);
         } catch (error: any) {
             console.log(error);
             toast.error(error.response.data.error);
         }
     };
 
-    const submitHandler = (data: RegisterFormValues) => {
-        sendRegistrationData(data);
+    const submitHandler = (registerData: RegisterFormValues) => {
+        sendRegistrationData(registerData);
         reset();
     };
 

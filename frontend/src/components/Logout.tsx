@@ -3,13 +3,14 @@ import { Navigate } from 'react-router-dom';
 
 import useUserStore from '../store/Store';
 
-const Logout: React.FC = () => {
-    const { isAuth, logoutUser } = useUserStore();
+import useUserHook from '../services/useUserHook';
 
-    if (isAuth) {
-        logoutUser();
-        localStorage.clear();
-    }
+const Logout: React.FC = () => {
+    const { isAuth } = useUserStore();
+
+    const { logoutUserService } = useUserHook();
+
+    if (isAuth) logoutUserService();
 
     return <Navigate to="/login" />;
 };

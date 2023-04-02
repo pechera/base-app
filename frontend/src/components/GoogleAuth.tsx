@@ -1,9 +1,8 @@
 import React from 'react';
 import { Axios } from '../services/Axios';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import useUserStore from '../store/Store';
+import useUserHook from '../services/useUserHook';
 
 import { GoogleDataSender, LoginResponseData } from '../types/data';
 
@@ -12,14 +11,11 @@ type GoogleAuthProps = {
 };
 
 const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
-    const [searchParams, setSearchParams] = useSearchParams({});
-    const navigate = useNavigate();
-
-    const { loginUser } = useUserStore();
+    const { loginUserService } = useUserHook();
 
     const sendGoogleData: GoogleDataSender = async (clientId, credential) => {
         try {
-            const response = await Axios.post<LoginResponseData>(
+            const { data } = await Axios.post<LoginResponseData>(
                 '/api/login/google',
                 {
                     clientId,
@@ -27,22 +23,13 @@ const GoogleAuth: React.FC<GoogleAuthProps> = ({ setError }) => {
                 }
             );
 
-            const { accessToken, refreshToken, username } = response.data;
+            const loginData = {
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+                username: data.username,
+            };
 
-            if (accessToken && refreshToken) {
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
-
-                loginUser(username);
-
-                const redirect = searchParams.get('redirect');
-
-                console.log(redirect);
-
-                redirect
-                    ? navigate(redirect, { replace: true })
-                    : navigate('/dashboard', { replace: true });
-            }
+            loginUserService(loginData);
         } catch (error: any) {
             console.log(error);
             setError(error.response.data.error);
