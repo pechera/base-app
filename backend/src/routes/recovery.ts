@@ -76,13 +76,15 @@ router.post('/password', async (req: Request, res: Response) => {
         const id = await redisClient.get(link);
 
         if (!id) {
-            return res.json({ error: 'Link not found or expiered' });
+            return res
+                .status(400)
+                .json({ error: 'Link not found or expiered' });
         }
 
         const user = await User.findOne({ id });
 
         if (!user) {
-            return res.json({ error: 'User not found' });
+            return res.status(400).json({ error: 'User not found' });
         }
 
         const salt = await bcrypt.genSalt(10);

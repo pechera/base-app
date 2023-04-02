@@ -7,21 +7,16 @@ import { axiosInstance } from '../../services/Axios';
 
 import styles from './styles/profile.module.css';
 
-import {
-    IChangePassword,
-    IPaswordsResponse,
-    IPasswordsToSend,
-} from '../../types/data';
+import useValidationOptions from '../../hooks/useValidationOptions';
+
+import { IChangePassword, IOneMessageResponse, IPasswordsToSend } from '../../types/data';
 
 interface IChangePasswordProps {
     hideModal: () => void;
     showModal: boolean;
 }
 
-const PasswordModal: React.FC<IChangePasswordProps> = ({
-    hideModal,
-    showModal,
-}) => {
+const PasswordModal: React.FC<IChangePasswordProps> = ({ hideModal, showModal }) => {
     const {
         register,
         handleSubmit,
@@ -32,41 +27,20 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({
         mode: 'onBlur',
     });
 
-    const validationOptions: RegisterOptions<IChangePassword> = {
-        required: 'Password is requared',
-        minLength: {
-            value: 5,
-            message: 'Minimum 5 symbols',
-        },
-        maxLength: {
-            value: 50,
-            message: 'Maximum 50 symbols',
-        },
-    };
+    const { validationPasswordOptions } = useValidationOptions();
 
     const currentPassword = watch('currentPassword');
     const newPassword = watch('newPassword');
 
-    const isDisabled: boolean =
-        currentPassword === undefined || currentPassword.length < 5;
+    const isDisabled: boolean = currentPassword === undefined || currentPassword.length < 5;
 
-    const sendChangePassword: MutationFunction<
-        IPaswordsResponse,
-        IPasswordsToSend
-    > = async (passwordsData) => {
-        const { data } = await axiosInstance.post(
-            '/api/profile/password',
-            passwordsData
-        );
+    const sendChangePassword: MutationFunction<IOneMessageResponse, IPasswordsToSend> = async (passwordsData) => {
+        const { data } = await axiosInstance.post('/api/profile/password', passwordsData);
 
         return data;
     };
 
-    const changePasswordMutation = useMutation<
-        IPaswordsResponse,
-        unknown,
-        IPasswordsToSend
-    >((data) => sendChangePassword(data), {
+    const changePasswordMutation = useMutation<IOneMessageResponse, unknown, IPasswordsToSend>((data) => sendChangePassword(data), {
         onMutate: () => {
             toast.loading('Changing password...', {
                 id: 'passLoad',
@@ -81,7 +55,7 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({
             toast.success(response.message, {
                 id: 'passLoad',
             });
-            setTimeout(() => hideModal(), 1000);
+            setTimeout(() => hideModal(), 1500);
         },
         onSettled: () => reset(),
     });
@@ -94,86 +68,48 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({
     };
 
     return (
-        <Modal
-            show={showModal}
-            onHide={hideModal}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+        <Modal show={showModal} onHide={hideModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Form onSubmit={handleSubmit(changePasswordHandler)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Change password</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
-                    <Form.Group
-                        className="mt-3"
-                        controlId="formCurrentPassword"
-                    >
+                    <Form.Group className="mt-3" controlId="formCurrentPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control
                             type="password"
                             placeholder="********"
-                            className={`form-control mt-1 ${
-                                errors.currentPassword && 'is-invalid'
-                            }`}
-                            {...register('currentPassword', validationOptions)}
+                            className={`form-control mt-1 ${errors.currentPassword && 'is-invalid'}`}
+                            {...register('currentPassword', validationPasswordOptions)}
                         />
-                        {errors.currentPassword && (
-                            <div className={styles.error_message}>
-                                {errors.currentPassword.message}
-                            </div>
-                        )}
+                        {errors.currentPassword && <div className={styles.error_message}>{errors.currentPassword.message}</div>}
                     </Form.Group>
                     <fieldset disabled={isDisabled}>
-                        <Form.Group
-                            className="mt-3"
-                            controlId="formNewPassword"
-                        >
+                        <Form.Group className="mt-3" controlId="formNewPassword">
                             <Form.Label>New password</Form.Label>
                             <Form.Control
                                 type="password"
                                 placeholder="********"
                                 className={`form-control mt-1 ${
-                                    (!isDisabled && errors.newPassword) ||
-                                    (errors.newPasswordConfirm?.type ==
-                                        'validate' &&
-                                        'is-invalid')
+                                    (!isDisabled && errors.newPassword) || (errors.newPasswordConfirm?.type == 'validate' && 'is-invalid')
                                 }`}
-                                {...register('newPassword', validationOptions)}
+                                {...register('newPassword', validationPasswordOptions)}
                             />
-                            {!isDisabled && errors.newPassword && (
-                                <div className={styles.error_message}>
-                                    {errors.newPassword.message}
-                                </div>
-                            )}
+                            {!isDisabled && errors.newPassword && <div className={styles.error_message}>{errors.newPassword.message}</div>}
                         </Form.Group>
-                        <Form.Group
-                            className="mt-3"
-                            controlId="formNewPasswordConfirm"
-                        >
+                        <Form.Group className="mt-3" controlId="formNewPasswordConfirm">
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control
                                 type="password"
                                 placeholder="********"
-                                className={`form-control mt-1 ${
-                                    !isDisabled &&
-                                    errors.newPasswordConfirm &&
-                                    'is-invalid'
-                                }`}
+                                className={`form-control mt-1 ${!isDisabled && errors.newPasswordConfirm && 'is-invalid'}`}
                                 {...register('newPasswordConfirm', {
-                                    ...validationOptions,
-                                    validate: (value) =>
-                                        value === newPassword ||
-                                        'Passwords not match',
+                                    ...validationPasswordOptions,
+                                    validate: (value) => value === newPassword || 'Passwords not match',
                                 })}
                             />
-                            {!isDisabled && errors.newPasswordConfirm && (
-                                <div className={styles.error_message}>
-                                    {errors.newPasswordConfirm.message}
-                                </div>
-                            )}
+                            {!isDisabled && errors.newPasswordConfirm && <div className={styles.error_message}>{errors.newPasswordConfirm.message}</div>}
                         </Form.Group>
                     </fieldset>
                 </Modal.Body>

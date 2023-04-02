@@ -13,6 +13,7 @@ import User from '../models/User.model.js';
 
 // SERVICES
 import renewTokens from '../services/renewTokens.service.js';
+import sendEmail from '../services/sendEmail.service.js';
 
 type RegisterData = {
     name: string;
@@ -47,8 +48,12 @@ router.post('/registration', async (req: Request, res: Response) => {
 
         // Email activation link
         const link: string = uuidv4();
-        // const html = `<div><a href="google.com/mail/${link}">Activate email</a></div>`;
-        // sendMail(email, 'Email verification', html);
+
+        const html = `<div>
+                        <a href="${process.env.CLIENT_URL}/mail/${link}">Activate email</a>
+                      </div>`;
+
+        sendEmail(email, 'Email verification', html);
 
         const newUser = new User({
             id,

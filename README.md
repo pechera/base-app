@@ -12,7 +12,7 @@ Basic setup app template on MERN stack for your MVP. In this project implemeting
 ✅ Form validation on frontend and backend both\
 ✅ State manager for saving user info around the app\
 ✅ React Hot Toasts notifications\
-⬜️ Integrate React Query\
+✅ Integrated React Query\
 ⬜️ Skeleton loaders\
 ⬜️ Email service via Amazon SES (now it's test SMTP)\
 ⬜️ Profile page where users can change account info

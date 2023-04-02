@@ -13,8 +13,9 @@ import useUserStore from '../store/Store';
 import styles from './styles/form.module.css';
 
 import useUserHook from '../hooks/useUserHook';
+import useValidationOptions from '../hooks/useValidationOptions';
 
-import { FormValues, LoginResponseData } from '../types/data';
+import { ILoginFormValues, ILoginResponseData } from '../types/data';
 
 const Login: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams({});
@@ -30,74 +31,45 @@ const Login: React.FC = () => {
         reset,
         resetField,
         formState: { errors },
-    } = useForm<FormValues>({
+    } = useForm<ILoginFormValues>({
         mode: 'onBlur',
     });
 
-    const validationEmailOptions: RegisterOptions = {
-        required: 'Email is requared',
-        pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: 'Invalid email address',
-        },
-    };
+    const { validationEmailOptions, validationPasswordOptions } = useValidationOptions();
 
-    const validationPasswordOptions: RegisterOptions = {
-        required: 'Password is requared',
-        minLength: {
-            value: 5,
-            message: 'Minimum 5 symbols',
-        },
-        maxLength: {
-            value: 50,
-            message: 'Maximum 50 symbols',
-        },
-    };
-
-    const sendLoginData: MutationFunction<
-        LoginResponseData,
-        FormValues
-    > = async (loginFormData) => {
+    const sendLoginData: MutationFunction<ILoginResponseData, ILoginFormValues> = async (loginFormData) => {
         const { data } = await Axios.post('/api/login', loginFormData);
 
         return data;
     };
 
-    const loginMutation = useMutation<LoginResponseData, unknown, FormValues>(
-        sendLoginData,
-        {
-            onError: (error: any) => {
-                console.log('error');
-                toast.error(error.response.data.error);
+    const loginMutation = useMutation<ILoginResponseData, unknown, ILoginFormValues>(sendLoginData, {
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error.response.data.error);
 
-                error.response.data.error === 'Incorrect password'
-                    ? resetField('password')
-                    : reset();
-            },
-            onSuccess: (data) => {
-                console.log('success');
-                const loginData = {
-                    accessToken: data.accessToken,
-                    refreshToken: data.refreshToken,
-                    username: data.username,
-                };
+            error.response.data.error === 'Incorrect password' ? resetField('password') : reset();
+        },
+        onSuccess: (data) => {
+            const loginData = {
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+                username: data.username,
+            };
 
-                loginUserService(loginData);
+            loginUserService(loginData);
 
-                const redirect = searchParams.get('redirect');
+            const redirect = searchParams.get('redirect');
 
-                redirect
-                    ? navigate(redirect, { replace: true })
-                    : navigate('/dashboard', { replace: true });
-            },
-        }
-    );
+            redirect ? navigate(redirect, { replace: true }) : navigate('/dashboard', { replace: true });
+        },
+    });
 
     const setErrorHandler = (error: any): void => {
         toast.error(error.message);
     };
 
-    const submitHandler = (loginFormData: FormValues): void => {
+    const submitHandler = (loginFormData: ILoginFormValues): void => {
         loginMutation.mutate(loginFormData);
     };
 
@@ -107,52 +79,34 @@ const Login: React.FC = () => {
 
     return (
         <div className={styles.auth_form__container}>
-            <form
-                className={styles.auth_form}
-                onSubmit={handleSubmit(submitHandler)}
-            >
+            <form className={styles.auth_form} onSubmit={handleSubmit(submitHandler)}>
                 <div className={styles.auth_form__content}>
                     <h3 className={styles.auth_form__title}>Sign In</h3>
                     <div className="form-group mt-3">
                         <label>Email address</label>
                         <input
                             type="email"
-                            className={`form-control mt-1 ${
-                                errors.email && 'is-invalid'
-                            }`}
+                            className={`form-control mt-1 ${errors.email && 'is-invalid'}`}
                             placeholder="Enter email"
                             {...register('email', validationEmailOptions)}
                         />
-                        {errors.email && (
-                            <div className={styles.error_message}>
-                                {errors.email.message}
-                            </div>
-                        )}
+                        {errors.email && <div className={styles.error_message}>{errors.email.message}</div>}
                     </div>
                     <div className="form-group mt-3">
                         <label>Password</label>
                         <input
                             type="password"
-                            className={`form-control mt-1 ${
-                                errors.password && 'is-invalid'
-                            }`}
+                            className={`form-control mt-1 ${errors.password && 'is-invalid'}`}
                             placeholder="Enter password"
                             {...register('password', validationPasswordOptions)}
                         />
 
                         <Row>
-                            <Col>
-                                {errors.password && (
-                                    <div className={styles.error_message}>
-                                        {errors.password.message}
-                                    </div>
-                                )}
-                            </Col>
+                            <Col>{errors.password && <div className={styles.error_message}>{errors.password.message}</div>}</Col>
                             <Col>
                                 <Form.Text className="d-flex text-muted justify-content-end">
                                     <span style={{ fontSize: '12px' }}>
-                                        Forgot{' '}
-                                        <Link to="/recovery">password?</Link>
+                                        Forgot <Link to="/recovery">password?</Link>
                                     </span>
                                 </Form.Text>
                             </Col>
@@ -164,9 +118,7 @@ const Login: React.FC = () => {
                         </button>
                     </div>
                     <div className="text-center">
-                        <p className="font-weight-light text-center text-secondary my-3">
-                            or
-                        </p>
+                        <p className="font-weight-light text-center text-secondary my-3">or</p>
                         <GoogleAuth setError={setErrorHandler} />
                     </div>
                     <div className="text-center mt-3">

@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
 import { RegisterOptions, useForm } from 'react-hook-form';
 import { Axios } from '../services/Axios';
+import { useMutation, MutationFunction } from 'react-query';
 import toast, { Toaster } from 'react-hot-toast';
 
 import styles from './styles/form.module.css';
 
-import { RecoveryFormValues, RecoveryDataSender } from '../types/data';
+import useValidationOptions from '../hooks/useValidationOptions';
+
+import { IOneMessageResponse, RecoveryFormValues } from '../types/data';
 
 const PasswordRecovery: React.FC = () => {
     const {
@@ -19,62 +22,42 @@ const PasswordRecovery: React.FC = () => {
         mode: 'onBlur',
     });
 
-    const validationOptions: RegisterOptions<RecoveryFormValues> = {
-        required: 'Email is requared',
-        pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: 'Invalid email address',
+    const { validationEmailOptions } = useValidationOptions();
+
+    const sendPasswordRequest: MutationFunction<IOneMessageResponse, RecoveryFormValues> = async (recoveryData) => {
+        const { data } = await Axios.post('/api/recovery', recoveryData);
+
+        return data;
+    };
+
+    const recoveryMutation = useMutation<IOneMessageResponse, unknown, RecoveryFormValues>(sendPasswordRequest, {
+        onError: (error: any) => {
+            toast.error(error.response.data.error);
         },
-    };
-
-    const sendPasswordRequest: RecoveryDataSender = async (data) => {
-        try {
-            const response = await Axios.post('/api/recovery', data);
-
-            console.log(response.data);
-
-            if (response.data.error) {
-                toast.error(response.data.error);
-            }
-
-            if (response.data.message) {
-                toast.success(response.data.message);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+        onSuccess: (data) => {
+            toast.success(data.message);
+        },
+        onSettled: () => reset(),
+    });
 
     const submitPasswordRecovery = (data: RecoveryFormValues): void => {
-        sendPasswordRequest(data);
-        reset();
+        recoveryMutation.mutate(data);
     };
 
     return (
         <Container className={styles.auth_form__container}>
-            <Form
-                className={styles.auth_form}
-                onSubmit={handleSubmit(submitPasswordRecovery)}
-            >
+            <Form className={styles.auth_form} onSubmit={handleSubmit(submitPasswordRecovery)}>
                 <div className={styles.auth_form__content}>
-                    <h3 className={styles.auth_form__title}>
-                        Password recovery
-                    </h3>
+                    <h3 className={styles.auth_form__title}>Password recovery</h3>
                     <Form.Group className="mt-3">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control
                             type="email"
                             placeholder="Enter email"
-                            className={`form-control mt-1 ${
-                                errors.email && 'is-invalid'
-                            }`}
-                            {...register('email', validationOptions)}
+                            className={`form-control mt-1 ${errors.email && 'is-invalid'}`}
+                            {...register('email', validationEmailOptions)}
                         />
-                        {errors.email && (
-                            <div className={styles.error_message}>
-                                {errors?.email.message}
-                            </div>
-                        )}
+                        {errors.email && <div className={styles.error_message}>{errors?.email.message}</div>}
                     </Form.Group>
                     <div className="d-grid gap-2 mt-3">
                         <Button type="submit" variant="primary">

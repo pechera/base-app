@@ -1,9 +1,9 @@
 import useUserStore from '../store/Store';
 
-import { LoginResponseData } from '../types/data';
+import { ILoginResponseData } from '../types/data';
 
 interface ILoginUser {
-    (data: LoginResponseData): void;
+    (data: ILoginResponseData): void;
 }
 
 interface IUserHooks {

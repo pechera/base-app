@@ -1,25 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import { useMutation, MutationFunction } from 'react-query';
 
 import { Axios } from '../services/Axios';
+
+import { IActivationLink, IOneMessageResponse } from '../types/data';
 
 const EmailActivation: React.FC = () => {
     const { link } = useParams();
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await Axios.post('/api/mail', { link });
+    const activateEmail: MutationFunction<IOneMessageResponse, IActivationLink> = async () => {
+        const { data } = await Axios.post('/api/mail', { link });
+        return data;
+    };
 
-                toast.success(response.data.message);
-            } catch (error: any) {
-                console.log(error);
-                toast.error(error.response.data.error);
-            }
-        })();
+    const activateEmailMutation = useMutation<IOneMessageResponse, unknown, IActivationLink>(activateEmail, {
+        onError: (error: any) => {
+            toast.error(error.response.data.error);
+        },
+        onSuccess: (data) => {
+            toast.success(data.message);
+        },
+    });
+
+    useLayoutEffect(() => {
+        // turn off StrictMode
+        activateEmailMutation.mutate({ link: link as string });
     }, []);
-    return <Toaster />;
+
+    return (
+        <>
+            <Toaster />
+        </>
+    );
 };
 
 export default EmailActivation;

@@ -1,36 +1,32 @@
+// Main
+export interface IOneMessageResponse {
+    message: string;
+}
+
 // Login
-export interface LoginResponseData {
+export interface ILoginResponseData {
     accessToken: string;
     refreshToken: string;
     username: string;
 }
 
-export interface FormValues {
+export interface ILoginFormValues {
     email: string;
     password: string;
 }
 
-// export interface LoginDataSender {
-//     ({ email, password }: FormValues): Promise<void>;
-// }
-
-export interface GoogleLoginData {
+export interface IGoogleFormValues {
     clientId: string;
     credential: string;
 }
 
-// export interface GoogleDataSender {
-//     (clientId: string, credential: string): Promise<void>;
-// }
-
-// Regostration
-
-export interface RegisterFormValues extends FormValues {
+// Registration
+export interface IRegisterFormValues extends ILoginFormValues {
     name: string;
 }
 
-export interface RegisterDataSender {
-    ({ email, password, name }: RegisterFormValues): Promise<void>;
+export interface IActivationLink {
+    link: string;
 }
 
 // Password Reset
@@ -39,25 +35,22 @@ export interface RecoveryFormValues {
     email: string;
 }
 
-export interface RecoveryDataSender {
-    (data: RecoveryFormValues): Promise<void>;
+export interface IRecoveryActivationSendData {
+    link: string;
+    password: string;
 }
 
-export interface RecoveryActiationFormValues {
+export interface IRecoveryActiationFormValues {
     password: string;
     confirmPassword: string;
 }
 
-export interface RecoveryActivationDataSender {
-    (data: { password: string }): Promise<void>;
-}
-
 // Profile
-
 export interface IProfile {
     name: string;
     email: string;
     activated: boolean;
+    register_method?: string;
 }
 
 // Change Password
@@ -70,8 +63,4 @@ export interface IChangePassword {
 export interface IPasswordsToSend {
     currentPassword: string;
     newPassword: string;
-}
-
-export interface IPaswordsResponse {
-    message: string;
 }

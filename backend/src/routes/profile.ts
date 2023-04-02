@@ -10,9 +10,6 @@ import auth from '../middlewares/auth.middleware.js';
 // DATABASE SCHEMAS
 import User from '../models/User.model.js';
 
-// TYPES
-import { IUser } from '../types/data.js';
-
 router.get('/profile', auth, async (req: Request, res: Response) => {
     const accessToken = req.headers.authorization!;
 
@@ -28,6 +25,7 @@ router.get('/profile', auth, async (req: Request, res: Response) => {
             name: user.name,
             email: user.email,
             activated: user.activated,
+            register_method: user.register_method,
         });
     } catch (error: any) {
         console.log(error);
