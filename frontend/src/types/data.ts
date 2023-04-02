@@ -46,3 +46,27 @@ export interface RecoveryActiationFormValues {
 export interface RecoveryActivationDataSender {
     (data: { password: string }): Promise<void>;
 }
+
+// Profile
+
+export interface IProfile {
+    name: string;
+    email: string;
+    activated: boolean;
+}
+
+// Change Password
+export interface IChangePassword {
+    currentPassword: string;
+    newPassword: string;
+    newPasswordConfirm: string;
+}
+
+export interface IPasswordsToSend {
+    currentPassword: string;
+    newPassword: string;
+}
+
+export interface IPaswordsResponse {
+    message: string;
+}

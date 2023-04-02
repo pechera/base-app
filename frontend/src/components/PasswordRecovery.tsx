@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Form, Button } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import { RegisterOptions, useForm } from 'react-hook-form';
 import { Axios } from '../services/Axios';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -18,6 +18,14 @@ const PasswordRecovery: React.FC = () => {
     } = useForm<RecoveryFormValues>({
         mode: 'onBlur',
     });
+
+    const validationOptions: RegisterOptions<RecoveryFormValues> = {
+        required: 'Email is requared',
+        pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Invalid email address',
+        },
+    };
 
     const sendPasswordRequest: RecoveryDataSender = async (data) => {
         try {
@@ -57,18 +65,10 @@ const PasswordRecovery: React.FC = () => {
                         <Form.Control
                             type="email"
                             placeholder="Enter email"
-                            className={
-                                errors.email
-                                    ? 'form-control mt-1 is-invalid'
-                                    : 'form-control mt-1'
-                            }
-                            {...register('email', {
-                                required: 'Email is requared',
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: 'Invalid email address',
-                                },
-                            })}
+                            className={`form-control mt-1 ${
+                                errors.email && 'is-invalid'
+                            }`}
+                            {...register('email', validationOptions)}
                         />
                         {errors.email && (
                             <div className={styles.error_message}>

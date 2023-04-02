@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Axios } from '../services/Axios';
-import { Container, Form, Button } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import { Form, Button } from 'react-bootstrap';
+import { RegisterOptions, useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -30,6 +30,18 @@ const RecoveryActivation: React.FC = () => {
 
     const password = watch('password');
 
+    const validationOptions: RegisterOptions<RecoveryActiationFormValues> = {
+        required: 'Password is requared',
+        minLength: {
+            value: 5,
+            message: 'Minimum 5 symbols',
+        },
+        maxLength: {
+            value: 50,
+            message: 'Maximum 50 symbols',
+        },
+    };
+    // доделать валидацию паролей
     useEffect(() => {
         (async () => {
             try {
@@ -87,25 +99,13 @@ const RecoveryActivation: React.FC = () => {
                             <Form.Control
                                 type="password"
                                 placeholder="**********"
-                                className={
+                                className={`form-control mt-1 ${
                                     errors.password ||
-                                    (errors.confirmPassword &&
-                                        errors.confirmPassword.type ==
-                                            'validate')
-                                        ? 'form-control mt-1 is-invalid'
-                                        : 'form-control mt-1'
-                                }
-                                {...register('password', {
-                                    required: 'Password is requared',
-                                    minLength: {
-                                        value: 5,
-                                        message: 'Minimum 5 symbols',
-                                    },
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Maximum 50 symbols',
-                                    },
-                                })}
+                                    (errors.confirmPassword?.type ==
+                                        'validate' &&
+                                        'is-invalid')
+                                }`}
+                                {...register('password', validationOptions)}
                             />
                             {errors.password && (
                                 <div className={styles.error_message}>
@@ -118,35 +118,16 @@ const RecoveryActivation: React.FC = () => {
                             <Form.Control
                                 type="password"
                                 placeholder="**********"
-                                className={
-                                    errors.confirmPassword
-                                        ? 'form-control mt-1 is-invalid'
-                                        : 'form-control mt-1'
-                                }
-                                {...register('confirmPassword', {
-                                    required: 'Password is requared',
-                                    minLength: {
-                                        value: 5,
-                                        message: 'Minimum 5 symbols',
-                                    },
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Maximum 50 symbols',
-                                    },
-                                    validate: (value) =>
-                                        value === password ||
-                                        'Passwords not match',
-                                })}
+                                className={`form-control mt-1 ${
+                                    errors.confirmPassword && 'is-invalid'
+                                }`}
+                                {...register(
+                                    'confirmPassword',
+                                    validationOptions
+                                )}
                             />
                             {errors.confirmPassword && (
-                                <div
-                                    style={{
-                                        color: 'red',
-                                        fontSize: '12px',
-                                        marginTop: '5px',
-                                        paddingLeft: '5px',
-                                    }}
-                                >
+                                <div className={styles.error_message}>
                                     {errors.confirmPassword.message}
                                 </div>
                             )}

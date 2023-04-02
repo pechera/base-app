@@ -10,7 +10,7 @@ import RecoveryActivation from './components/RecoveryActivation';
 import PasswordRecovery from './components/PasswordRecovery';
 
 import Private from './router/Private';
-import Profile from './components/Profile';
+import Profile from './components/Profile/Profile';
 
 const App: React.FC = () => {
     const queryClient = new QueryClient();

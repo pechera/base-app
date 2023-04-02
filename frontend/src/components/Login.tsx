@@ -2,7 +2,7 @@ import React from 'react';
 import { Axios } from '../services/Axios';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Form, Row, Col } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import { RegisterOptions, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 
 import GoogleAuth from './GoogleAuth';
@@ -32,6 +32,26 @@ const Login: React.FC = () => {
     } = useForm<FormValues>({
         mode: 'onBlur',
     });
+
+    const validationEmailOptions: RegisterOptions = {
+        required: 'Email is requared',
+        pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Invalid email address',
+        },
+    };
+
+    const validationPasswordOptions: RegisterOptions = {
+        required: 'Password is requared',
+        minLength: {
+            value: 5,
+            message: 'Minimum 5 symbols',
+        },
+        maxLength: {
+            value: 50,
+            message: 'Maximum 50 symbols',
+        },
+    };
 
     const sendLoginData: LoginDataSender = async (loginFormData) => {
         try {
@@ -87,19 +107,11 @@ const Login: React.FC = () => {
                         <label>Email address</label>
                         <input
                             type="email"
-                            className={
-                                errors.email
-                                    ? 'form-control mt-1 is-invalid'
-                                    : 'form-control mt-1'
-                            }
+                            className={`form-control mt-1 ${
+                                errors.email && 'is-invalid'
+                            }`}
                             placeholder="Enter email"
-                            {...register('email', {
-                                required: 'Email is requared',
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: 'Invalid email address',
-                                },
-                            })}
+                            {...register('email', validationEmailOptions)}
                         />
                         {errors.email && (
                             <div className={styles.error_message}>
@@ -111,23 +123,11 @@ const Login: React.FC = () => {
                         <label>Password</label>
                         <input
                             type="password"
-                            className={
-                                errors.password
-                                    ? 'form-control mt-1 is-invalid'
-                                    : 'form-control mt-1'
-                            }
+                            className={`form-control mt-1 ${
+                                errors.password && 'is-invalid'
+                            }`}
                             placeholder="Enter password"
-                            {...register('password', {
-                                required: 'Password is requared',
-                                minLength: {
-                                    value: 5,
-                                    message: 'Minimum 5 symbols',
-                                },
-                                maxLength: {
-                                    value: 50,
-                                    message: 'Maximum 50 symbols',
-                                },
-                            })}
+                            {...register('password', validationPasswordOptions)}
                         />
 
                         <Row>

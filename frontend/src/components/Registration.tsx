@@ -1,7 +1,7 @@
 import React from 'react';
 import { Axios } from '../services/Axios';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, RegisterOptions } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 
 import GoogleAuth from './GoogleAuth';
@@ -33,6 +33,38 @@ const Registration: React.FC = () => {
     } = useForm<RegisterFormValues>({
         mode: 'onBlur',
     });
+
+    const validationNameOptions: RegisterOptions = {
+        required: 'Name is requared',
+        minLength: {
+            value: 3,
+            message: 'Minimum 3 symbols',
+        },
+        maxLength: {
+            value: 50,
+            message: 'Maximum 50 symbols',
+        },
+    };
+
+    const validationEmailOptions: RegisterOptions = {
+        required: 'Email is requared',
+        pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Invalid email address',
+        },
+    };
+
+    const validationPasswordOptions: RegisterOptions = {
+        required: 'Password is requared',
+        minLength: {
+            value: 5,
+            message: 'Minimum 5 symbols',
+        },
+        maxLength: {
+            value: 50,
+            message: 'Maximum 50 symbols',
+        },
+    };
 
     const setErrorHandler = (error: any) => {
         toast.error(error.message);
@@ -85,23 +117,11 @@ const Registration: React.FC = () => {
                         <label>Full Name</label>
                         <input
                             type="text"
-                            className={
-                                errors.name
-                                    ? 'form-control mt-1 is-invalid'
-                                    : 'form-control mt-1'
-                            }
+                            className={`form-control mt-1 ${
+                                errors.name && 'is-invalid'
+                            }`}
                             placeholder="e.g Jane Doe"
-                            {...register('name', {
-                                required: 'Name is requared',
-                                minLength: {
-                                    value: 3,
-                                    message: 'Minimum 3 symbols',
-                                },
-                                maxLength: {
-                                    value: 50,
-                                    message: 'Maximum 50 symbols',
-                                },
-                            })}
+                            {...register('name', validationNameOptions)}
                         />
                         {errors.name && (
                             <div className={styles.error_message}>
@@ -113,19 +133,11 @@ const Registration: React.FC = () => {
                         <label>Email address</label>
                         <input
                             type="email"
-                            className={
-                                errors.email
-                                    ? 'form-control mt-1 is-invalid'
-                                    : 'form-control mt-1'
-                            }
+                            className={`form-control mt-1 ${
+                                errors.email && 'is-invalid'
+                            }`}
                             placeholder="Enter email"
-                            {...register('email', {
-                                required: 'Email is requared',
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: 'Invalid email address',
-                                },
-                            })}
+                            {...register('email', validationEmailOptions)}
                         />
                         {errors.email && (
                             <div className={styles.error_message}>
@@ -137,23 +149,11 @@ const Registration: React.FC = () => {
                         <label>Password</label>
                         <input
                             type="password"
-                            className={
-                                errors.password
-                                    ? 'form-control mt-1 is-invalid'
-                                    : 'form-control mt-1'
-                            }
+                            className={`form-control mt-1 ${
+                                errors.password && 'is-invalid'
+                            }`}
                             placeholder="Enter password"
-                            {...register('password', {
-                                required: 'Password is requared',
-                                minLength: {
-                                    value: 5,
-                                    message: 'Minimum 5 symbols',
-                                },
-                                maxLength: {
-                                    value: 50,
-                                    message: 'Maximum 50 symbols',
-                                },
-                            })}
+                            {...register('password', validationPasswordOptions)}
                         />
                         {errors.password && (
                             <div className={styles.error_message}>
