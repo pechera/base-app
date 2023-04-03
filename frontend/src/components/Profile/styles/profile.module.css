@@ -1,12 +1,14 @@
 .activated {
     color: lightgrey;
     font-size: 12px;
+    margin-left: 5px;
 }
 
 .change_label {
     color: grey;
     font-size: 12px;
     margin-top: 5px;
+    cursor: pointer;
 }
 
 .error_message {
@@ -14,4 +16,9 @@
     font-size: 12px;
     padding-left: 5px;
     margin-top: 5px;
+}
+
+.change_password {
+    margin-top: 10px;
+    cursor: pointer;
 }

@@ -12,12 +12,11 @@ Basic setup app template on MERN stack for your MVP. In this project implemeting
 ✅ Form validation on frontend and backend both\
 ✅ State manager for saving user info around the app\
 ✅ React Hot Toasts notifications\
-✅ Integrated React Query\
 ⬜️ Skeleton loaders\
 ⬜️ Email service via Amazon SES (now it's test SMTP)\
 ⬜️ Profile page where users can change account info
 
-Stack: Typescript, React, Vite, React Router, Zustand, Express, MongoDB, Redis, Nodemailer\
+Stack: Typescript, React, Vite, React Router, React Query, Zustand, Express, MongoDB, Redis, Nodemailer\
 Styles: Bootstrap
 
 ## Environment Variables
@@ -25,10 +24,11 @@ Styles: Bootstrap
 To run this project, you will need to add the following environment variables to your env/.env file
 
 Backend:\
-`PORT`\
-`DATABASE` // MongoDB connection string\
+`CLIENT_URL`\ // Client URL
 \
-`CLIENT_URL`\
+`PORT`\ // Server port (default 4000)
+\
+`DATABASE` // MongoDB connection string\
 \
 `TOKEN_SECRET` // JWT Tokent secret phrase\
 \
@@ -91,5 +91,5 @@ Start project locally
 
 ```bash
   cd backend && npm run dev
-  cd .. && cd frontend && yarn vite
+  cd frontend && yarn vite
 ```

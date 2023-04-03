@@ -73,59 +73,55 @@ const Profile: React.FC = () => {
             <NavBar />
             <Container className="p-3">
                 <h1>Profile</h1>
-                {isLoading && <div>Loading...</div>}
                 {data && (
-                    <>
-                        <Form className="p-2 mt-3" onSubmit={handleSubmit(changeEmailHandler)}>
-                            <Form.Group className="mt-3" controlId="formUsername">
-                                <Form.Label>Username</Form.Label>
-                                <div>{data.name}</div>
-                            </Form.Group>
-                            <Form.Group className="mt-3" controlId="formEmail">
-                                <Form.Label>{changeEmail ? <>Enter new email</> : <>Email</>}</Form.Label>
-                                {changeEmail ? (
-                                    <>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Email"
-                                            // value={data.email}
-                                            className={`form-control mt-1 ${errors.email && 'is-invalid'}`}
-                                            {...register('email', validationEmailOptions)}
-                                        />
-                                        {errors.email && <div className={styles.error_message}>{errors?.email.message}</div>}
-                                    </>
-                                ) : (
-                                    <div>
-                                        <span>{data.email}</span>{' '}
-                                        {data.activated ? (
-                                            <span className={styles.activated}>activated</span>
-                                        ) : (
-                                            <span className={styles.activated}>not activated</span>
-                                        )}
-                                    </div>
-                                )}
-                                {data.register_method === undefined && (
-                                    <div onClick={() => setChangeEmail((prev) => !prev)} className={styles.change_label}>
-                                        Change email
-                                    </div>
-                                )}
-                            </Form.Group>
-
-                            {data.register_method === undefined ? (
-                                <div className="mt-3" onClick={() => setChangePassword(true)} style={{ cursor: 'pointer' }}>
-                                    Change password
-                                </div>
+                    <Form className="p-2 mt-3" onSubmit={handleSubmit(changeEmailHandler)}>
+                        <Form.Group className="mt-3" controlId="formUsername">
+                            <Form.Label>Username</Form.Label>
+                            <div>{data.name}</div>
+                        </Form.Group>
+                        <Form.Group className="mt-3" controlId="formEmail">
+                            <Form.Label>{changeEmail ? <>Enter new email</> : <>Email</>}</Form.Label>
+                            {changeEmail ? (
+                                <>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Email"
+                                        className={`form-control mt-1 ${errors.email && 'is-invalid'}`}
+                                        {...register('email', validationEmailOptions)}
+                                    />
+                                    <div className={styles.error_message}>{errors?.email?.message}</div>
+                                </>
                             ) : (
-                                <div className="mt-3">You registered with Google</div>
+                                <div>
+                                    <span>{data.email}</span>
+                                    {data.activated ? (
+                                        <span className={styles.activated}>activated</span>
+                                    ) : (
+                                        <span className={styles.activated}>not activated</span>
+                                    )}
+                                </div>
                             )}
+                            {data.register_method === undefined && (
+                                <div onClick={() => setChangeEmail((prev) => !prev)} className={styles.change_label}>
+                                    Change email
+                                </div>
+                            )}
+                        </Form.Group>
+                        {data.register_method === undefined ? (
+                            <div className={styles.change_password} onClick={() => setChangePassword(true)}>
+                                Change password
+                            </div>
+                        ) : (
+                            <div className="mt-3">You registered with Google</div>
+                        )}
 
-                            <Button variant="primary" type="submit" className="mt-3">
-                                Save
-                            </Button>
-                        </Form>
-                        <PasswordModal showModal={changePassword} hideModal={() => setChangePassword(false)} />
-                    </>
+                        <Button variant="primary" type="submit" className="mt-3">
+                            Save
+                        </Button>
+                    </Form>
                 )}
+
+                <PasswordModal showModal={changePassword} hideModal={() => setChangePassword(false)} />
                 <Toaster />
             </Container>
         </div>
