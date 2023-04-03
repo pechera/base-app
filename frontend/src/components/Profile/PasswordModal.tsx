@@ -9,14 +9,9 @@ import styles from './styles/profile.module.css';
 
 import useValidationOptions from '../../hooks/useValidationOptions';
 
-import { IChangePassword, IOneMessageResponse, IPasswordsToSend } from '../../types/data';
+import { IChangeModalProps, IChangePassword, IOneMessageResponse, IPasswordsToSend } from '../../types/data';
 
-interface IChangePasswordProps {
-    hideModal: () => void;
-    showModal: boolean;
-}
-
-const PasswordModal: React.FC<IChangePasswordProps> = ({ hideModal, showModal }) => {
+const PasswordModal: React.FC<IChangeModalProps> = ({ hideModal, showModal }) => {
     const {
         register,
         handleSubmit,

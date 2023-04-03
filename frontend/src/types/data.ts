@@ -68,3 +68,8 @@ export interface IPasswordsToSend {
     currentPassword: string;
     newPassword: string;
 }
+
+export interface IChangeModalProps {
+    hideModal: () => void;
+    showModal: boolean;
+}

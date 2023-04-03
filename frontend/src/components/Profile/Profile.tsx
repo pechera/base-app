@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import NavBar from '../partials/NavBar';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import { axiosInstance } from '../../services/Axios';
-import { useForm } from 'react-hook-form';
-import { useQuery, useMutation, MutationFunction } from 'react-query';
+import { useQuery } from 'react-query';
 import toast, { Toaster } from 'react-hot-toast';
 
 import styles from './styles/profile.module.css';
 
-import useValidationOptions from '../../hooks/useValidationOptions';
-
-import { IProfile, RecoveryFormValues, IOneMessageResponse } from '../../types/data';
+import { IProfile } from '../../types/data';
 
 import PasswordModal from './PasswordModal';
+import EmailModal from './EmailModal';
 
 const getProfileData = async () => {
     const { data } = await axiosInstance.get<IProfile>('/api/profile');
@@ -24,49 +22,19 @@ const Profile: React.FC = () => {
     const [changeEmail, setChangeEmail] = useState<boolean>(false);
     const [changePassword, setChangePassword] = useState<boolean>(false);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<RecoveryFormValues>({
-        mode: 'onBlur',
-    });
-
-    const { validationEmailOptions } = useValidationOptions();
-
     const { isLoading, error, data } = useQuery('profile', getProfileData);
 
-    const sendChangeEmail: MutationFunction<IOneMessageResponse, RecoveryFormValues> = async (emailData) => {
-        const { data } = await axiosInstance.post('/api/profile/email', emailData);
-        return data;
-    };
-
-    const changeEmailMutation = useMutation<IOneMessageResponse, unknown, RecoveryFormValues>(sendChangeEmail, {
-        onMutate: () => {
-            toast.loading('Changing email...', {
-                id: 'emailLoad',
-            });
-        },
-        onError: (error: any) => {
-            toast.error(error.response.data.message, {
-                id: 'emailLoad',
-            });
-        },
-        onSuccess: (data) => {
-            toast.success(data.message, {
-                id: 'emailLoad',
-            });
-            setTimeout(() => setChangeEmail(false), 1500);
-        },
-        onSettled: () => reset(),
-    });
-
-    const changeEmailHandler = async (data: RecoveryFormValues) => {
-        changeEmailMutation.mutate(data);
-    };
-
     if (error) toast.error('Something went wrong');
+
+    const changeEmailHandler = () => {
+        if (data && data.activated === false) {
+            toast.error('I order to change email you need to activate it first', {
+                id: 'emailLoad',
+            });
+        } else {
+            setChangeEmail(true);
+        }
+    };
 
     return (
         <div>
@@ -74,53 +42,34 @@ const Profile: React.FC = () => {
             <Container className="p-3">
                 <h1>Profile</h1>
                 {data && (
-                    <Form className="p-2 mt-3" onSubmit={handleSubmit(changeEmailHandler)}>
+                    <Form className="p-2 mt-3">
                         <Form.Group className="mt-3" controlId="formUsername">
                             <Form.Label>Username</Form.Label>
                             <div>{data.name}</div>
                         </Form.Group>
                         <Form.Group className="mt-3" controlId="formEmail">
-                            <Form.Label>{changeEmail ? <>Enter new email</> : <>Email</>}</Form.Label>
-                            {changeEmail ? (
-                                <>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Email"
-                                        className={`form-control mt-1 ${errors.email && 'is-invalid'}`}
-                                        {...register('email', validationEmailOptions)}
-                                    />
-                                    <div className={styles.error_message}>{errors?.email?.message}</div>
-                                </>
-                            ) : (
-                                <div>
-                                    <span>{data.email}</span>
-                                    {data.activated ? (
-                                        <span className={styles.activated}>activated</span>
-                                    ) : (
-                                        <span className={styles.activated}>not activated</span>
-                                    )}
-                                </div>
-                            )}
+                            <Form.Label>Email</Form.Label>
+                            <div>
+                                <span>{data.email}</span>
+                                {data.activated ? <span className={styles.activated}>activated</span> : <span className={styles.activated}>not activated</span>}
+                            </div>
                             {data.register_method === undefined && (
-                                <div onClick={() => setChangeEmail((prev) => !prev)} className={styles.change_label}>
-                                    Change email
+                                <div onClick={changeEmailHandler} className={styles.change_password}>
+                                    Change email {'>'}
                                 </div>
                             )}
                         </Form.Group>
                         {data.register_method === undefined ? (
                             <div className={styles.change_password} onClick={() => setChangePassword(true)}>
-                                Change password
+                                Change password {'>'}
                             </div>
                         ) : (
                             <div className="mt-3">You registered with Google</div>
                         )}
-
-                        <Button variant="primary" type="submit" className="mt-3">
-                            Save
-                        </Button>
                     </Form>
                 )}
 
+                <EmailModal showModal={changeEmail} hideModal={() => setChangeEmail(false)} />
                 <PasswordModal showModal={changePassword} hideModal={() => setChangePassword(false)} />
                 <Toaster />
             </Container>
