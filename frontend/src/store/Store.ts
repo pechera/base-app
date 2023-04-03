@@ -9,30 +9,15 @@ interface UserState {
     logoutUser: () => void;
 }
 
-interface IStorage extends StateStorage {
-    getItem: (key: string) => string | Promise<string | null> | null;
-    setItem: (key: string, value: string) => void;
-    removeItem: (key: string) => void;
-}
-
-// Need string | Promise<string | null> | null
-// Now string | number | boolean | object | null
-
-const secureStorage: IStorage = {
+const secureStorage: StateStorage = {
     getItem: (key) => {
         const value = secureLocalStorage.getItem(key);
 
-        let result: string | null = null; // Promise<string | null> |
-
         if (typeof value === 'string' || value === null) {
-            result = value;
-        } else if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'object') {
-            result = JSON.stringify(value);
+            return value;
         } else {
-            throw new Error('Unsupported data type');
+            return JSON.stringify(value);
         }
-
-        return result;
     },
     setItem: (key, value) => secureLocalStorage.setItem(key, value),
     removeItem: (key) => secureLocalStorage.removeItem(key),
