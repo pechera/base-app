@@ -4,6 +4,7 @@ export interface IOneMessageResponse {
 }
 
 // Login
+
 export interface ILoginResponseData {
     accessToken: string;
     refreshToken: string;
@@ -21,6 +22,7 @@ export interface IGoogleFormValues {
 }
 
 // Registration
+
 export interface IRegisterFormValues extends ILoginFormValues {
     name: string;
 }
@@ -46,6 +48,7 @@ export interface IRecoveryActiationFormValues {
 }
 
 // Profile
+
 export interface IProfile {
     name: string;
     email: string;
@@ -54,6 +57,7 @@ export interface IProfile {
 }
 
 // Change Password
+
 export interface IChangePassword {
     currentPassword: string;
     newPassword: string;

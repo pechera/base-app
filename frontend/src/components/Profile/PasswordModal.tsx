@@ -29,10 +29,10 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({ hideModal, showModal })
 
     const { validationPasswordOptions } = useValidationOptions();
 
-    const currentPassword = watch('currentPassword');
-    const newPassword = watch('newPassword');
+    const currentPasswordWatch = watch('currentPassword');
+    const newPasswordWatch = watch('newPassword');
 
-    const isDisabled: boolean = currentPassword === undefined || currentPassword.length < 5;
+    const isEnabled: boolean = currentPasswordWatch !== undefined && currentPasswordWatch.length > 5;
 
     const sendChangePassword: MutationFunction<IOneMessageResponse, IPasswordsToSend> = async (passwordsData) => {
         const { data } = await axiosInstance.post('/api/profile/password', passwordsData);
@@ -64,6 +64,15 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({ hideModal, showModal })
         const currentPassword = data.currentPassword;
         const newPassword = data.newPassword;
 
+        if (currentPassword === newPassword) {
+            toast.error('New password must be different from the current one!', {
+                id: 'passLoad',
+            });
+
+            reset();
+            return;
+        }
+
         changePasswordMutation.mutate({ currentPassword, newPassword });
     };
 
@@ -85,31 +94,31 @@ const PasswordModal: React.FC<IChangePasswordProps> = ({ hideModal, showModal })
                         />
                         {errors.currentPassword && <div className={styles.error_message}>{errors.currentPassword.message}</div>}
                     </Form.Group>
-                    <fieldset disabled={isDisabled}>
+                    <fieldset disabled={!isEnabled}>
                         <Form.Group className="mt-3" controlId="formNewPassword">
                             <Form.Label>New password</Form.Label>
                             <Form.Control
                                 type="password"
                                 placeholder="********"
                                 className={`form-control mt-1 ${
-                                    (!isDisabled && errors.newPassword) || (errors.newPasswordConfirm?.type == 'validate' && 'is-invalid')
+                                    isEnabled && (errors.newPassword || errors.newPasswordConfirm?.type == 'validate') && 'is-invalid'
                                 }`}
                                 {...register('newPassword', validationPasswordOptions)}
                             />
-                            {!isDisabled && errors.newPassword && <div className={styles.error_message}>{errors.newPassword.message}</div>}
+                            {isEnabled && errors.newPassword && <div className={styles.error_message}>{errors.newPassword.message}</div>}
                         </Form.Group>
                         <Form.Group className="mt-3" controlId="formNewPasswordConfirm">
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control
                                 type="password"
                                 placeholder="********"
-                                className={`form-control mt-1 ${!isDisabled && errors.newPasswordConfirm && 'is-invalid'}`}
+                                className={`form-control mt-1 ${isEnabled && errors.newPasswordConfirm && 'is-invalid'}`}
                                 {...register('newPasswordConfirm', {
                                     ...validationPasswordOptions,
-                                    validate: (value) => value === newPassword || 'Passwords not match',
+                                    validate: (value) => value === newPasswordWatch || 'Passwords not match',
                                 })}
                             />
-                            {!isDisabled && errors.newPasswordConfirm && <div className={styles.error_message}>{errors.newPasswordConfirm.message}</div>}
+                            {isEnabled && errors.newPasswordConfirm && <div className={styles.error_message}>{errors.newPasswordConfirm.message}</div>}
                         </Form.Group>
                     </fieldset>
                 </Modal.Body>
