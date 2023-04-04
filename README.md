@@ -23,13 +23,13 @@ Styles: Bootstrap
 To run this project, you will need to add the following environment variables to your env/.env file
 
 Backend:\
-`CLIENT_URL`\ // Client URL
+`CLIENT_URL` Client URL
 \
-`PORT`\ // Server port (default 4000)
+`PORT` Server port (default 4000)
 \
-`DATABASE` // MongoDB connection string\
+`DATABASE` MongoDB connection string\
 \
-`TOKEN_SECRET` // JWT Tokent secret phrase\
+`TOKEN_SECRET` JWT Tokent secret phrase\
 \
 NODEMAILER\
 `MAIL_HOST`\
