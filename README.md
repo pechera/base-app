@@ -48,11 +48,9 @@ GOOGLE AUTH\
 Frontend:\
 Create .env.development file for dev or .env for prod version
 
-SERVER URL\
-`VITE_SERVE_URL`
+`VITE_SERVE_URL` SERVER URL\
 
-GOOGLE AUTH\
-`VITE_GOOGLE_CLIENT_ID`
+`VITE_GOOGLE_CLIENT_ID` GOOGLE AUTH\
 
 ## Run Locally
 
