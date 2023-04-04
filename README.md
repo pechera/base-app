@@ -11,9 +11,8 @@ Basic setup app template on MERN stack for your MVP. In this project implemeting
 ✅ Private routes\
 ✅ Form validation on frontend and backend both\
 ✅ State manager for saving user info around the app\
-✅ React Hot Toasts notifications\
-⬜️ Email service via Amazon SES (now it's test SMTP)\
-⬜️ Profile page where users can change account info
+✅ Profile page where users can change account info\
+⬜️ Email service via Amazon SES (now it's test SMTP)
 
 Stack: Typescript, React, Vite, React Router, React Query, Zustand, Express, MongoDB, Redis, Nodemailer\
 Styles: Bootstrap
