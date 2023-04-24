@@ -19,9 +19,11 @@ Styles: Bootstrap
 
 ## Screenshots
 
-![login page](https://raw.githubusercontent.com/pechera/base-app/master/login.png)
+![login page](https://raw.githubusercontent.com/pechera/base-app/master/login.png)\
+Login page
 
-![dashboard page](https://raw.githubusercontent.com/pechera/base-app/master/dashboard.png)
+![dashboard page](https://raw.githubusercontent.com/pechera/base-app/master/dashboard.png)\
+Dashboard page
 
 ## Environment Variables
 
