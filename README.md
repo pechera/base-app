@@ -17,6 +17,12 @@ Basic setup app template on MERN stack for your MVP. In this project implemeting
 Stack: Typescript, React, Vite, React Router, React Query, Zustand, Express, MongoDB, Redis, Nodemailer\
 Styles: Bootstrap
 
+## Screenshots
+
+![login page](https://raw.githubusercontent.com/pechera/base-app/master/login.png)
+
+![dashboard page](https://raw.githubusercontent.com/pechera/base-app/master/dashboard.png)
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your env/.env file
